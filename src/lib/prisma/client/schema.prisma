@@ -65,15 +65,17 @@ model VerificationToken {
 
 model Exercise {
   id   String @id @default(cuid())
-  name String @unique // Ensure exercise names are unique per user initially? Or globally? Let's start globally for simplicity.
+  name String // Name is unique per user, not globally
 
-  userId String? // Optional: Track who created custom exercises
-  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull) // If user deleted, exercise remains
+  userId String // Required: Each exercise belongs to a user
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) // If user deleted, their exercises are deleted
 
   sets Set[] // Relation to sets using this exercise
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, name]) // Ensure exercise name is unique for each user
 }
 
 model WorkoutLog {
