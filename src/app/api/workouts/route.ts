@@ -102,5 +102,66 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/workouts - Fetch workout logs (Implement later for viewing records)
-// export async function GET(request: NextRequest) { ... }
+// GET /api/workouts - Fetch workout logs for a specific date
+export async function GET(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const userId = session.user.id;
+
+  const { searchParams } = new URL(request.url);
+  const dateParam = searchParams.get('date'); // Expecting date in 'YYYY-MM-DD' format
+
+  if (!dateParam) {
+    return NextResponse.json({ error: 'Date query parameter is required' }, { status: 400 });
+  }
+
+  // Validate date format (simple check, consider more robust validation)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      return NextResponse.json({ error: 'Invalid date format. Use YYYY-MM-DD.' }, { status: 400 });
+  }
+
+  try {
+    // Parse the date and calculate the start and end of the day
+    const targetDate = new Date(dateParam + 'T00:00:00Z'); // Assume UTC or handle timezone appropriately
+    const startOfDay = new Date(targetDate);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date(targetDate);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+
+    const workoutLogs = await prisma.workoutLog.findMany({
+      where: {
+        userId: userId,
+        date: {
+          gte: startOfDay, // Greater than or equal to start of day
+          lte: endOfDay,   // Less than or equal to end of day
+        },
+      },
+      include: {
+        sets: { // Include the sets for each log
+          include: {
+            exercise: true, // Include the exercise details for each set
+          },
+          orderBy: {
+            createdAt: 'asc', // Order sets by creation time within the log
+          }
+        },
+      },
+      orderBy: {
+        createdAt: 'desc', // Order logs by creation time (most recent first for the day)
+      },
+    });
+
+    return NextResponse.json(workoutLogs);
+
+  } catch (error: any) {
+    console.error('Error fetching workout logs:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch workout logs' },
+      { status: 500 }
+    );
+  }
+}

@@ -16,6 +16,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Workout Tracker PWA", // Updated title
   description: "Track your workouts easily", // Updated description
+  manifest: "/manifest.json", // Link to manifest
+  themeColor: "#2d3748", // Set theme color
 };
 
 export default function RootLayout({
