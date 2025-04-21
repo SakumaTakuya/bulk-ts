@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useAddSetFormStore } from '@/store/addSetFormStore'; // Import the store
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -18,13 +19,8 @@ interface AddSetFormComponentProps {
   exercises: Exercise[];
   isLoadingExercises: boolean;
   fetchError: string | null;
-  selectedExerciseId: string;
-  onExerciseChange: (id: string) => void;
-  currentReps: string;
-  onRepsChange: (value: string) => void;
-  currentWeight: string;
-  onWeightChange: (value: string) => void;
-  onAddSet: () => void;
+  // Removed props managed by Zustand store
+  onAddSet: () => void; // Keep onAddSet as it likely involves parent logic (API calls)
   isAddingSet: boolean;
 }
 
@@ -32,15 +28,20 @@ export function AddSetFormComponent({
   exercises,
   isLoadingExercises,
   fetchError,
-  selectedExerciseId,
-  onExerciseChange,
-  currentReps,
-  onRepsChange,
-  currentWeight,
-  onWeightChange,
+  // Removed props managed by Zustand store
   onAddSet,
   isAddingSet,
 }: AddSetFormComponentProps) {
+  // Get state and setters from the Zustand store
+  const {
+    selectedExerciseId,
+    currentReps,
+    currentWeight,
+    setSelectedExerciseId,
+    setCurrentReps,
+    setCurrentWeight,
+  } = useAddSetFormStore();
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -54,7 +55,8 @@ export function AddSetFormComponent({
         )}
         {!isLoadingExercises && exercises.length > 0 && (
           <>
-            <Select value={selectedExerciseId} onValueChange={onExerciseChange}>
+            {/* Use state and setters from the store */}
+            <Select value={selectedExerciseId} onValueChange={setSelectedExerciseId}>
               <SelectTrigger>
                 <SelectValue placeholder="Select exercise" />
               </SelectTrigger>
@@ -71,7 +73,7 @@ export function AddSetFormComponent({
                 type="number"
                 placeholder="Reps"
                 value={currentReps}
-                onChange={(e) => onRepsChange(e.target.value)}
+                onChange={(e) => setCurrentReps(e.target.value)} // Use store setter
                 min="0"
                 step="1"
                 required
@@ -81,7 +83,7 @@ export function AddSetFormComponent({
                 type="number"
                 placeholder="Weight (kg)"
                 value={currentWeight}
-                onChange={(e) => onWeightChange(e.target.value)}
+                onChange={(e) => setCurrentWeight(e.target.value)} // Use store setter
                 min="0"
                 step="0.5" // Allow .5 increments
                 required

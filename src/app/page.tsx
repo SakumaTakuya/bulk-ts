@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react'; // Removed FormEvent as it's not used
 import { useSession, signIn } from 'next-auth/react';
+import { useAddSetFormStore } from '@/store/addSetFormStore'; // Import the store
 import { Button } from '@/components/ui/button';
 // Input, Card, Popover, Calendar, Select, Table are now used within sub-components
 import { Toaster, toast } from "sonner";
@@ -40,11 +41,18 @@ export default function HomePage() {
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>([]);
-  const [selectedExerciseId, setSelectedExerciseId] = useState<string>('');
-  const [currentReps, setCurrentReps] = useState('');
-  const [currentWeight, setCurrentWeight] = useState('');
-  const [isAddingSet, setIsAddingSet] = useState(false);
+  // Removed local state for form fields, now managed by Zustand
+  const [isAddingSet, setIsAddingSet] = useState(false); // Keep state for AddSet button loading
   const [isSavingWorkout, setIsSavingWorkout] = useState(false);
+
+  // Get form state and actions from Zustand store
+  const {
+    selectedExerciseId,
+    currentReps,
+    currentWeight,
+    resetForm, // Get the reset action
+    // setSelectedExerciseId // Get setter if needed for default setting
+  } = useAddSetFormStore();
 
   // Fetch exercises when authenticated
   useEffect(() => {
@@ -60,9 +68,8 @@ export default function HomePage() {
         }
         const data: Exercise[] = await response.json();
         setExercises(data);
-        if (data.length > 0 && !selectedExerciseId) {
-          setSelectedExerciseId(data[0].id); // Default to first exercise
-        }
+        // Removed setting default selectedExerciseId here - handled by store default or could be set via store setter if needed
+        // Example: if (data.length > 0 && !selectedExerciseId) { setSelectedExerciseId(data[0].id); }
       } catch (err: any) {
         console.error("Failed to fetch exercises:", err);
         setFetchError(err.message || 'Failed to load exercises.');
@@ -76,6 +83,7 @@ export default function HomePage() {
   }, [status]); // Re-run when session status changes
 
   const handleAddSet = () => {
+    // Read values directly from Zustand store
     const repsNum = parseInt(currentReps, 10);
     const weightNum = parseFloat(currentWeight);
     const selectedExercise = exercises.find(ex => ex.id === selectedExerciseId);
@@ -97,11 +105,9 @@ export default function HomePage() {
 
     setCurrentSets(prevSets => [...prevSets, newSet]);
 
-    // Reset form fields (optional: maybe keep exercise selected?)
-    // setSelectedExerciseId(''); // Keep selected?
-    setCurrentReps('');
-    setCurrentWeight('');
-    setIsAddingSet(false);
+    // Reset form fields using the store's action
+    resetForm();
+    setIsAddingSet(false); // Still manage local button loading state if desired
     toast.success(`Set added: ${selectedExercise.name} ${repsNum} reps @ ${weightNum}kg`);
   };
 
@@ -112,49 +118,49 @@ export default function HomePage() {
 
   const handleSaveWorkout = async () => {
     if (!selectedDate) {
-        toast.error("Please select a date for the workout.");
-        return;
+      toast.error("Please select a date for the workout.");
+      return;
     }
     if (currentSets.length === 0) {
-        toast.error("Please add at least one set to save the workout.");
-        return;
+      toast.error("Please add at least one set to save the workout.");
+      return;
     }
 
     setIsSavingWorkout(true);
     setFetchError(null);
 
     const workoutData = {
-        date: selectedDate.toISOString(), // Send as ISO string
-        sets: currentSets.map(({ exerciseId, reps, weight }) => ({ // Map to API format
-            exerciseId,
-            reps,
-            weight,
-        })),
+      date: selectedDate.toISOString(), // Send as ISO string
+      sets: currentSets.map(({ exerciseId, reps, weight }) => ({ // Map to API format
+        exerciseId,
+        reps,
+        weight,
+      })),
     };
 
     try {
-        const response = await fetch('/api/workouts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(workoutData),
-        });
+      const response = await fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(workoutData),
+      });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
 
-        // const savedWorkout = await response.json(); // Contains the saved log with IDs
-        toast.success(`Workout for ${dayjs(selectedDate).format('YYYY-MM-DD')} saved successfully!`);
-        setCurrentSets([]); // Clear sets after successful save
-        // Optionally reset date or other fields
+      // const savedWorkout = await response.json(); // Contains the saved log with IDs
+      toast.success(`Workout for ${dayjs(selectedDate).format('YYYY-MM-DD')} saved successfully!`);
+      setCurrentSets([]); // Clear sets after successful save
+      // Optionally reset date or other fields
 
     } catch (err: any) {
-        console.error("Failed to save workout:", err);
-        setFetchError(err.message || 'Failed to save workout.');
-        toast.error(err.message || 'Failed to save workout.');
+      console.error("Failed to save workout:", err);
+      setFetchError(err.message || 'Failed to save workout.');
+      toast.error(err.message || 'Failed to save workout.');
     } finally {
-        setIsSavingWorkout(false);
+      setIsSavingWorkout(false);
     }
   };
 
@@ -190,14 +196,9 @@ export default function HomePage() {
         exercises={exercises}
         isLoadingExercises={isLoadingExercises}
         fetchError={fetchError}
-        selectedExerciseId={selectedExerciseId}
-        onExerciseChange={setSelectedExerciseId}
-        currentReps={currentReps}
-        onRepsChange={setCurrentReps}
-        currentWeight={currentWeight}
-        onWeightChange={setCurrentWeight}
+        // Remove props now handled by Zustand store
         onAddSet={handleAddSet}
-        isAddingSet={isAddingSet}
+        isAddingSet={isAddingSet} // Keep passing this if AddSetFormComponent uses it for its button state
       />
 
       {/* Current Sets Table Component */}
