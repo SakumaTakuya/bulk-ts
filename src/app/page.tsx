@@ -3,18 +3,18 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Toaster, toast } from "sonner"; // Import Toaster and toast
-import { Calendar as CalendarIcon, PlusCircle, Trash2 } from "lucide-react"; // Icons
-import { cn } from "@/lib/utils";
-import dayjs from 'dayjs'; // Import dayjs
+// Input, Card, Popover, Calendar, Select, Table are now used within sub-components
+import { Toaster, toast } from "sonner";
+import { PlusCircle, Trash2 } from "lucide-react"; // Keep icons used directly here
+// cn is used by sub-components, not directly here anymore
+import dayjs from 'dayjs';
+import { DatePickerComponent } from '@/components/home/DatePickerComponent';
+import { AddSetFormComponent } from '@/components/home/AddSetFormComponent';
+import { CurrentSetsTableComponent } from '@/components/home/CurrentSetsTableComponent';
 
 // Define the Exercise type (matching the one used in exercises page/API)
+// This should ideally be moved to a shared types file (e.g., src/types/index.ts)
+// For now, AddSetFormComponent defines its own minimal version.
 interface Exercise {
   id: string;
   name: string;
@@ -23,9 +23,9 @@ interface Exercise {
   updatedAt: string;
 }
 
-// Define the structure for a set being added to the log
+// Define the structure for a set being added/managed in the main state
 interface WorkoutSet {
-  tempId: string; // Temporary ID for list key before saving
+  tempId: string; // Temporary ID for list key
   exerciseId: string;
   exerciseName: string; // Store name for display
   reps: number;
@@ -179,123 +179,35 @@ export default function HomePage() {
       <Toaster richColors position="top-center" /> {/* Add Toaster component */}
       <h1 className="text-3xl font-bold mb-6 text-center">Record Workout</h1>
 
-      {/* Date Picker */}
-      <div className="mb-6">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !selectedDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+      {/* Date Picker Component */}
+      <DatePickerComponent
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+      />
 
-      {/* Add Set Form */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Add Set</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isLoadingExercises && <div>Loading exercises...</div>}
-          {fetchError && <div className="text-red-500">{fetchError}</div>}
-          {!isLoadingExercises && exercises.length === 0 && !fetchError && (
-            <div>No exercises found. <a href="/exercises" className="text-blue-500 underline">Manage exercises</a> first.</div>
-          )}
-          {!isLoadingExercises && exercises.length > 0 && (
-            <>
-              <Select value={selectedExerciseId} onValueChange={setSelectedExerciseId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select exercise" />
-                </SelectTrigger>
-                <SelectContent>
-                  {exercises.map((exercise) => (
-                    <SelectItem key={exercise.id} value={exercise.id}>
-                      {exercise.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex gap-4">
-                <Input
-                  type="number"
-                  placeholder="Reps"
-                  value={currentReps}
-                  onChange={(e) => setCurrentReps(e.target.value)}
-                  min="0"
-                  step="1"
-                  required
-                  className="flex-1"
-                />
-                <Input
-                  type="number"
-                  placeholder="Weight (kg)"
-                  value={currentWeight}
-                  onChange={(e) => setCurrentWeight(e.target.value)}
-                  min="0"
-                  step="0.5" // Allow .5 increments
-                  required
-                  className="flex-1"
-                />
-              </div>
-              <Button onClick={handleAddSet} disabled={isAddingSet || !selectedExerciseId} className="w-full">
-                <PlusCircle className="mr-2 h-4 w-4" /> {isAddingSet ? 'Adding...' : 'Add Set'}
-              </Button>
-            </>
-          )}
-        </CardContent>
-      </Card>
+      {/* Add Set Form Component */}
+      <AddSetFormComponent
+        exercises={exercises}
+        isLoadingExercises={isLoadingExercises}
+        fetchError={fetchError}
+        selectedExerciseId={selectedExerciseId}
+        onExerciseChange={setSelectedExerciseId}
+        currentReps={currentReps}
+        onRepsChange={setCurrentReps}
+        currentWeight={currentWeight}
+        onWeightChange={setCurrentWeight}
+        onAddSet={handleAddSet}
+        isAddingSet={isAddingSet}
+      />
 
-      {/* Current Sets Table */}
-      {currentSets.length > 0 && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Current Workout Sets ({dayjs(selectedDate).format('YYYY-MM-DD')})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Exercise</TableHead>
-                  <TableHead className="text-right">Reps</TableHead>
-                  <TableHead className="text-right">Weight (kg)</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentSets.map((set) => (
-                  <TableRow key={set.tempId}>
-                    <TableCell>{set.exerciseName}</TableCell>
-                    <TableCell className="text-right">{set.reps}</TableCell>
-                    <TableCell className="text-right">{set.weight}</TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => handleRemoveSet(set.tempId)}>
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
+      {/* Current Sets Table Component */}
+      <CurrentSetsTableComponent
+        currentSets={currentSets}
+        selectedDate={selectedDate}
+        onRemoveSet={handleRemoveSet}
+      />
 
-      {/* Save Workout Button */}
+      {/* Save Workout Button (remains here) */}
       <Button
         onClick={handleSaveWorkout}
         disabled={isSavingWorkout || currentSets.length === 0}

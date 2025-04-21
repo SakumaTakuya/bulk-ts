@@ -2,9 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { PrismaClient } from '@prisma/client'; // Adjust path if needed
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Adjust path as needed
-
-// Consider creating a singleton Prisma instance in e.g., src/lib/prisma.ts
-const prisma = new PrismaClient();
+import prisma  from '@/lib/prisma';
 
 // GET /api/exercises - Fetch exercises for the logged-in user
 export async function GET(request: NextRequest) {
@@ -25,7 +23,9 @@ export async function GET(request: NextRequest) {
         name: 'asc', // Order alphabetically
       },
     });
-    return NextResponse.json(exercises);
+
+    // Return an empty array if no exercises are found
+    return NextResponse.json(exercises.length ? exercises : []);
   } catch (error) {
     console.error('Error fetching exercises:', error);
     return NextResponse.json(

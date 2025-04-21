@@ -3,9 +3,7 @@ import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma for Tran
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { z } from 'zod'; // Using Zod for validation
-
-// Consider creating a singleton Prisma instance
-const prisma = new PrismaClient();
+import prisma  from '@/lib/prisma'; 
 
 // Define validation schema for a single set
 const setSchema = z.object({
