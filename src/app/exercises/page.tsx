@@ -5,7 +5,6 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button'; // Assuming shadcn Button is installed
 import { Input } from '@/components/ui/input'; // Assuming shadcn Input is installed
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'; // Assuming shadcn Card is installed
-import { toast } from "sonner"; // Assuming sonner (toast) is installed via shadcn
 
 // Define the Exercise type based on Prisma schema
 interface Exercise {
@@ -16,8 +15,13 @@ interface Exercise {
   updatedAt: string;
 }
 
+// エラー型を定義
+interface FetchError extends Error {
+  message: string;
+}
+
 export default function ExercisesPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [newExerciseName, setNewExerciseName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -35,10 +39,10 @@ export default function ExercisesPage() {
       }
       const data: Exercise[] = await response.json();
       setExercises(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to fetch exercises:", err);
-      setError(err.message || 'Failed to load exercises.');
-      // toast.error(err.message || 'Failed to load exercises.'); // Use toast for user feedback
+      const fetchError = err as FetchError;
+      setError(fetchError.message || 'Failed to load exercises.');
     } finally {
       setIsLoading(false);
     }
@@ -51,16 +55,15 @@ export default function ExercisesPage() {
     }
     // Reset state if user logs out
     if (status === 'unauthenticated') {
-        setExercises([]);
-        setError(null);
-        setNewExerciseName('');
+      setExercises([]);
+      setError(null);
+      setNewExerciseName('');
     }
   }, [status]); // Re-run when session status changes
 
   const handleCreateExercise = async (e: FormEvent) => {
     e.preventDefault();
     if (!newExerciseName.trim()) {
-      // toast.warning("Exercise name cannot be empty.");
       return;
     }
     setIsSubmitting(true);
@@ -83,11 +86,10 @@ export default function ExercisesPage() {
       const createdExercise: Exercise = await response.json();
       setExercises((prev) => [...prev, createdExercise].sort((a, b) => a.name.localeCompare(b.name))); // Add and sort
       setNewExerciseName(''); // Clear input
-      // toast.success(`Exercise "${createdExercise.name}" created!`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to create exercise:", err);
-      setError(err.message || 'Failed to create exercise.');
-      // toast.error(err.message || 'Failed to create exercise.');
+      const fetchError = err as FetchError;
+      setError(fetchError.message || 'Failed to create exercise.');
     } finally {
       setIsSubmitting(false);
     }
@@ -155,12 +157,12 @@ export default function ExercisesPage() {
               ))}
             </ul>
           )}
-           {/* Display fetch error here as well */}
-           {!isLoading && error && <div className="text-red-500 mt-4">{error}</div>}
+          {/* Display fetch error here as well */}
+          {!isLoading && error && <div className="text-red-500 mt-4">{error}</div>}
         </CardContent>
       </Card>
-       {/* Add Toaster component here later for toast notifications */}
-       {/* <Toaster /> */}
+      {/* Add Toaster component here later for toast notifications */}
+      {/* <Toaster /> */}
     </div>
   );
 }

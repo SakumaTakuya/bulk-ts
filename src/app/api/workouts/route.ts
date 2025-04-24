@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma for TransactionClient type
+import { Prisma } from '@prisma/client'; // Import Prisma for TransactionClient type
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { z } from 'zod'; // Using Zod for validation
-import prisma  from '@/lib/prisma'; 
+import prisma from '@/lib/prisma';
 
 // Define validation schema for a single set
 const setSchema = z.object({
@@ -45,13 +45,13 @@ export async function POST(request: NextRequest) {
     // Verify that all exercise IDs belong to the current user
     const exerciseIds = sets.map((set: z.infer<typeof setSchema>) => set.exerciseId); // Add type to set
     const userExercisesCount = await prisma.exercise.count({
-        where: {
-            id: { in: exerciseIds },
-            userId: userId,
-        },
+      where: {
+        id: { in: exerciseIds },
+        userId: userId,
+      },
     });
     if (userExercisesCount !== exerciseIds.length) {
-        return NextResponse.json({ error: 'One or more exercises not found or do not belong to the user' }, { status: 400 });
+      return NextResponse.json({ error: 'One or more exercises not found or do not belong to the user' }, { status: 400 });
     }
     // --- End Integrity Check ---
 
@@ -83,14 +83,14 @@ export async function POST(request: NextRequest) {
 
     // Optionally fetch the full log with sets to return
     const fullLog = await prisma.workoutLog.findUnique({
-        where: { id: newWorkoutLog.id },
-        include: { sets: { include: { exercise: true } } } // Include sets and their exercises
+      where: { id: newWorkoutLog.id },
+      include: { sets: { include: { exercise: true } } } // Include sets and their exercises
     });
 
 
     return NextResponse.json(fullLog, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating workout log:', error);
     // Handle specific errors if necessary (e.g., foreign key constraints)
     return NextResponse.json(
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
 
   // Validate date format (simple check, consider more robust validation)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
-      return NextResponse.json({ error: 'Invalid date format. Use YYYY-MM-DD.' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid date format. Use YYYY-MM-DD.' }, { status: 400 });
   }
 
   try {
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(workoutLogs);
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching workout logs:', error);
     return NextResponse.json(
       { error: 'Failed to fetch workout logs' },

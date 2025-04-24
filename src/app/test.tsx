@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, Home, Search, User, Settings, ShoppingCart } from 'lucide-react';
+import { Menu, Home, Search, User, Settings, ShoppingCart } from 'lucide-react';
 import {
   Sheet,
   SheetContent,

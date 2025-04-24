@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { PrismaClient } from '@prisma/client'; // Adjust path if needed
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Adjust path as needed
-import prisma  from '@/lib/prisma';
+import prisma from '@/lib/prisma';
+// PrismaClientKnownRequestErrorを直接インポート
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 // GET /api/exercises - Fetch exercises for the logged-in user
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
 
   // Ensure user is authenticated and we have the user ID
@@ -67,14 +68,20 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(newExercise, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating exercise:', error);
-    // Handle potential unique constraint violation (userId, name)
-    if (error.code === 'P2002' && error.meta?.target?.includes('userId') && error.meta?.target?.includes('name')) {
-      return NextResponse.json(
-        { error: 'You already have an exercise with this name' },
-        { status: 409 } // Conflict
-      );
+    // エラータイプチェック
+    if (error instanceof PrismaClientKnownRequestError) {
+      // Handle potential unique constraint violation (userId, name)
+      if (error.code === 'P2002' &&
+        Array.isArray(error.meta?.target) &&
+        error.meta.target.includes('userId') &&
+        error.meta.target.includes('name')) {
+        return NextResponse.json(
+          { error: 'You already have an exercise with this name' },
+          { status: 409 } // Conflict
+        );
+      }
     }
     return NextResponse.json(
       { error: 'Failed to create exercise' },

@@ -6,7 +6,7 @@ import { useAddSetFormStore } from '@/store/addSetFormStore'; // Import the stor
 import { Button } from '@/components/ui/button';
 // Input, Card, Popover, Calendar, Select, Table are now used within sub-components
 import { Toaster, toast } from "sonner";
-import { PlusCircle, Trash2 } from "lucide-react"; // Keep icons used directly here
+// 未使用のアイコンインポートを削除
 // cn is used by sub-components, not directly here anymore
 import dayjs from 'dayjs';
 import { DatePickerComponent } from '@/components/home/DatePickerComponent';
@@ -33,8 +33,15 @@ interface WorkoutSet {
   weight: number;
 }
 
+// エラー型を定義
+interface FetchError extends Error {
+  message: string;
+}
+
 export default function HomePage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
+  // session変数は未使用なので削除
+
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [isLoadingExercises, setIsLoadingExercises] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -68,12 +75,11 @@ export default function HomePage() {
         }
         const data: Exercise[] = await response.json();
         setExercises(data);
-        // Removed setting default selectedExerciseId here - handled by store default or could be set via store setter if needed
-        // Example: if (data.length > 0 && !selectedExerciseId) { setSelectedExerciseId(data[0].id); }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to fetch exercises:", err);
-        setFetchError(err.message || 'Failed to load exercises.');
-        toast.error(err.message || 'Failed to load exercises.');
+        const fetchError = err as FetchError;
+        setFetchError(fetchError.message || 'Failed to load exercises.');
+        toast.error(fetchError.message || 'Failed to load exercises.');
       } finally {
         setIsLoadingExercises(false);
       }
@@ -155,15 +161,15 @@ export default function HomePage() {
       setCurrentSets([]); // Clear sets after successful save
       // Optionally reset date or other fields
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to save workout:", err);
-      setFetchError(err.message || 'Failed to save workout.');
-      toast.error(err.message || 'Failed to save workout.');
+      const fetchError = err as FetchError;
+      setFetchError(fetchError.message || 'Failed to save workout.');
+      toast.error(fetchError.message || 'Failed to save workout.');
     } finally {
       setIsSavingWorkout(false);
     }
   };
-
 
   if (status === 'loading') {
     return <div className="flex items-center justify-center min-h-screen">Loading session...</div>;

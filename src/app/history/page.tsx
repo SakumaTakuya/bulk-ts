@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -28,14 +28,19 @@ interface WorkoutLogWithSets {
     // Add other WorkoutLog fields if needed
 }
 
+// エラー型を定義
+interface FetchError extends Error {
+    message: string;
+}
+
 export default function HistoryPage() {
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [workoutLogs, setWorkoutLogs] = useState<WorkoutLogWithSets[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchWorkoutLogs = async (date: Date | undefined) => {
+    const fetchWorkoutLogs = useCallback(async (date: Date | undefined) => {
         if (!date || status !== 'authenticated') {
             setWorkoutLogs([]); // Clear logs if no date or not authenticated
             return;
@@ -56,19 +61,20 @@ export default function HistoryPage() {
             if (data.length === 0) {
                 toast.info(`No workouts recorded on ${formattedDate}.`);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Failed to fetch workout logs:", err);
-            setError(err.message || 'Failed to load workout logs.');
-            toast.error(err.message || 'Failed to load workout logs.');
+            const fetchError = err as FetchError;
+            setError(fetchError.message || 'Failed to load workout logs.');
+            toast.error(fetchError.message || 'Failed to load workout logs.');
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [status]);
 
     // Fetch logs when the selected date or session status changes
     useEffect(() => {
         fetchWorkoutLogs(selectedDate);
-    }, [selectedDate, status]);
+    }, [selectedDate, status, fetchWorkoutLogs]);
 
     if (status === 'loading') {
         return <div className="flex items-center justify-center min-h-screen">Loading session...</div>;
@@ -93,7 +99,7 @@ export default function HistoryPage() {
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Calendar */}
                 <div className="flex justify-center md:justify-start">
-                     <Calendar
+                    <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={(date) => {
