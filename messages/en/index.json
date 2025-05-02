@@ -1,0 +1,39 @@
+{
+    "navigation": {
+        "home": "Home",
+        "exercises": "Exercises",
+        "history": "History"
+    },
+    "home": {
+        "title": "Workout Tracker",
+        "addSet": "Add Set",
+        "exercise": "Exercise",
+        "weight": "Weight",
+        "reps": "Reps",
+        "date": "Date",
+        "add": "Add",
+        "currentSets": "Current Sets",
+        "noSets": "No sets added yet",
+        "save": "Save"
+    },
+    "exercises": {
+        "title": "Exercises",
+        "addExercise": "Add Exercise",
+        "name": "Name",
+        "category": "Category"
+    },
+    "history": {
+        "title": "Workout History",
+        "noWorkouts": "No workouts found"
+    },
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit"
+    },
+    "notFound": {
+        "title": "404 - Page Not Found",
+        "message": "Sorry, the page you are looking for could not be found."
+    }
+}

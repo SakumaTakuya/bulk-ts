@@ -1,0 +1,39 @@
+{
+    "navigation": {
+        "home": "ホーム",
+        "exercises": "エクササイズ",
+        "history": "履歴"
+    },
+    "home": {
+        "title": "ワークアウトトラッカー",
+        "addSet": "セットを追加",
+        "exercise": "エクササイズ",
+        "weight": "重量",
+        "reps": "回数",
+        "date": "日付",
+        "add": "追加",
+        "currentSets": "現在のセット",
+        "noSets": "まだセットが追加されていません",
+        "save": "保存"
+    },
+    "exercises": {
+        "title": "エクササイズ",
+        "addExercise": "エクササイズを追加",
+        "name": "名前",
+        "category": "カテゴリ"
+    },
+    "history": {
+        "title": "ワークアウト履歴",
+        "noWorkouts": "ワークアウトが見つかりません"
+    },
+    "common": {
+        "save": "保存",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "edit": "編集"
+    },
+    "notFound": {
+        "title": "404 - ページが見つかりません",
+        "message": "申し訳ありませんが、リクエストされたページは見つかりませんでした。"
+    }
+}
