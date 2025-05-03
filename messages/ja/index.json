@@ -14,23 +14,31 @@
         "add": "追加",
         "currentSets": "現在のセット",
         "noSets": "まだセットが追加されていません",
-        "save": "保存"
+        "adding": "追加中..."
     },
     "exercises": {
         "title": "エクササイズ",
         "addExercise": "エクササイズを追加",
         "name": "名前",
-        "category": "カテゴリ"
+        "category": "カテゴリ",
+        "noExercises": "エクササイズが見つかりません",
+        "yourExercises": "あなたのエクササイズ"
     },
     "history": {
         "title": "ワークアウト履歴",
-        "noWorkouts": "ワークアウトが見つかりません"
+        "noWorkouts": "ワークアウトが見つかりません",
+        "failedToLoad": "ワークアウトの読み込みに失敗しました",
+        "selectDate": "日付を選択してください"
     },
     "common": {
         "save": "保存",
         "cancel": "キャンセル",
         "delete": "削除",
-        "edit": "編集"
+        "edit": "編集",
+        "signIn": "サインイン",
+        "signOut": "サインアウト",
+        "loading": "読み込み中...",
+        "unauthenticated": "認証されていません"
     },
     "notFound": {
         "title": "404 - ページが見つかりません",

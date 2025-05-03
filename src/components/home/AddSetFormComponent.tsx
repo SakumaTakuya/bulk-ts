@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 // Define the Exercise type locally or import if shared
 interface Exercise {
@@ -19,8 +20,7 @@ interface AddSetFormComponentProps {
   exercises: Exercise[];
   isLoadingExercises: boolean;
   fetchError: string | null;
-  // Removed props managed by Zustand store
-  onAddSet: () => void; // Keep onAddSet as it likely involves parent logic (API calls)
+  onAddSet: () => void;
   isAddingSet: boolean;
 }
 
@@ -28,11 +28,11 @@ export function AddSetFormComponent({
   exercises,
   isLoadingExercises,
   fetchError,
-  // Removed props managed by Zustand store
   onAddSet,
   isAddingSet,
 }: AddSetFormComponentProps) {
-  // Get state and setters from the Zustand store
+  let t = useTranslations('home');
+
   const {
     selectedExerciseId,
     currentReps,
@@ -45,7 +45,7 @@ export function AddSetFormComponent({
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Add Set</CardTitle>
+        <CardTitle>{t("addSet")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoadingExercises && <div>Loading exercises...</div>}
@@ -91,7 +91,7 @@ export function AddSetFormComponent({
               />
             </div>
             <Button onClick={onAddSet} disabled={isAddingSet || !selectedExerciseId} className="w-full">
-              <PlusCircle className="mr-2 h-4 w-4" /> {isAddingSet ? 'Adding...' : 'Add Set'}
+              <PlusCircle className="mr-2 h-4 w-4" /> {isAddingSet ? t("adding") : t("addSet")}
             </Button>
           </>
         )}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, FormEvent } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -120,7 +120,6 @@ export default function ExercisesPage() {
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">{t('title')}</h1>
-                <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
             </div>
 
             <Card className="mb-6">
@@ -150,7 +149,7 @@ export default function ExercisesPage() {
                     <CardTitle>{t('yourExercises')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {isLoading && <div>{t('loading')}...</div>}
+                    {isLoading && <div>{common('loading')}...</div>}
                     {!isLoading && exercises.length === 0 && !error && (
                         <div>{t('noExercises')}</div>
                     )}

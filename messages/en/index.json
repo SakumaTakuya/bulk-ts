@@ -14,23 +14,29 @@
         "add": "Add",
         "currentSets": "Current Sets",
         "noSets": "No sets added yet",
-        "save": "Save"
+        "adding": "Adding..."
     },
     "exercises": {
         "title": "Exercises",
         "addExercise": "Add Exercise",
         "name": "Name",
-        "category": "Category"
+        "category": "Category",
+        "noExercises": "No exercises found",
+        "yourExercises": "Your Exercises"
     },
     "history": {
         "title": "Workout History",
-        "noWorkouts": "No workouts found"
+        "noWorkouts": "No workouts found",
+        "failedToLoad": "Failed to load workouts",
+        "selectDate": "Select Date"
     },
     "common": {
         "save": "Save",
         "cancel": "Cancel",
         "delete": "Delete",
-        "edit": "Edit"
+        "edit": "Edit",
+        "signOut": "Sign Out",
+        "loading": "Loading..."
     },
     "notFound": {
         "title": "404 - Page Not Found",

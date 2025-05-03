@@ -9,6 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
 import dayjs from 'dayjs';
+import { useFormatter } from 'next-intl';
 
 // エクササイズを含むセットの型定義
 interface SetWithExercise {
@@ -35,9 +36,10 @@ interface FetchError extends Error {
 
 export default function HistoryPage() {
     const { status } = useSession();
-    // フックは常に同じ順序で呼び出す
+    const format = useFormatter();
     const t = useTranslations('history');
     const home = useTranslations('home');
+    const common = useTranslations('common');
 
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [workoutLogs, setWorkoutLogs] = useState<WorkoutLogWithSets[]>([]);
@@ -65,13 +67,13 @@ export default function HistoryPage() {
                 const data: WorkoutLogWithSets[] = await response.json();
                 setWorkoutLogs(data);
                 if (data.length === 0) {
-                    toast.info(`${formattedDate}に記録されたワークアウトはありません。`);
+                    toast.info(t('noWorkouts'));
                 }
             } catch (err: unknown) {
                 console.error("Failed to fetch workout logs:", err);
                 const fetchError = err as FetchError;
-                setError(fetchError.message || 'ワークアウトログの読み込みに失敗しました。');
-                toast.error(fetchError.message || 'ワークアウトログの読み込みに失敗しました。');
+                setError(fetchError.message || t("failedToLoad"));
+                toast.error(fetchError.message || t("failedToLoad"));
             } finally {
                 setIsLoading(false);
             }
@@ -83,15 +85,17 @@ export default function HistoryPage() {
     }, [selectedDate, status]);
 
     if (status === 'loading') {
-        return <div className="flex items-center justify-center min-h-screen">ロード中...</div>;
+        return <div className="flex items-center justify-center min-h-screen">{common('loading')}</div>;
     }
 
     if (status === 'unauthenticated') {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
                 <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
-                <p className="mb-4">ワークアウト履歴を表示するにはサインインしてください。</p>
-                <Button onClick={() => signIn('google')}>Googleでサインイン</Button>
+                <p className="mb-4">
+                    {t('unauthenticated')}
+                </p>
+                <Button onClick={() => signIn('google')}>{t("signIn")}</Button>
             </div>
         );
     }
@@ -118,9 +122,9 @@ export default function HistoryPage() {
                 {/* ワークアウトログの表示 */}
                 <div className="flex-1">
                     <h2 className="text-2xl font-semibold mb-4">
-                        {selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : '選択した日付'}のワークアウト
+                        {selectedDate ? format.dateTime(selectedDate) : t('selectDate')}
                     </h2>
-                    {isLoading && <div>ワークアウトをロード中...</div>}
+                    {isLoading && <div>{common("loading")}</div>}
                     {error && <div className="text-red-500">エラー: {error}</div>}
                     {!isLoading && !error && workoutLogs.length === 0 && (
                         <div>{t('noWorkouts')}</div>
@@ -130,7 +134,7 @@ export default function HistoryPage() {
                             {workoutLogs.map((log) => (
                                 <Card key={log.id}>
                                     <CardHeader>
-                                        <CardTitle>ワークアウトログ</CardTitle>
+                                        <CardTitle>{t("title")}</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <Table>

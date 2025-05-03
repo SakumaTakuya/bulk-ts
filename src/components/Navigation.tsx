@@ -12,10 +12,12 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { signOut } from 'next-auth/react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const t = useTranslations('navigation');
+  const common = useTranslations('common');
 
   // 多言語化したナビゲーションリンク
   const navLinks = [
@@ -50,7 +52,7 @@ export default function Navigation() {
         </div>
         <div className="flex items-center gap-4">
           <LocaleSwitcher />
-          <Button>ログイン</Button>
+          <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
         </div>
       </nav>
 
@@ -92,7 +94,7 @@ export default function Navigation() {
               </div>
 
               <div className="pt-2 pb-8">
-                <Button className="w-full">ログイン</Button>
+                <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
               </div>
             </div>
           </SheetContent>

@@ -35,6 +35,7 @@ export default function HomePage() {
     const { status } = useSession();
     // フックは常に同じ順序で呼び出す
     const t = useTranslations('home');
+    const common = useTranslations('common');
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [isLoadingExercises, setIsLoadingExercises] = useState(false);
@@ -162,7 +163,7 @@ export default function HomePage() {
     };
 
     if (status === 'loading') {
-        return <div className="flex items-center justify-center min-h-screen">Loading session...</div>;
+        return <div className="flex items-center justify-center min-h-screen">{common("loading")}</div>;
     }
 
     if (status === 'unauthenticated') {
@@ -204,7 +205,7 @@ export default function HomePage() {
                 className="w-full text-lg py-6"
                 size="lg"
             >
-                {isSavingWorkout ? 'Saving...' : t('save')}
+                {isSavingWorkout ? 'Saving...' : common('save')}
             </Button>
         </div>
     );
