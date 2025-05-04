@@ -177,36 +177,40 @@ export default function HomePage() {
     }
 
     return (
-        <div className="container mx-auto p-4 max-w-3xl">
-            <h1 className="text-3xl font-bold mb-6 text-center">{t('title')}</h1>
+        <>
+            <div className="container mx-auto p-4 max-w-3xl pb-32">
+                <div className="flex flex-row items-end gap-4 mb-4">
+                    <div className="flex-1">
+                        <DatePickerComponent
+                            selectedDate={selectedDate}
+                            onSelectDate={setSelectedDate}
+                        />
+                    </div>
+                    <Button
+                        onClick={handleSaveWorkout}
+                        disabled={isSavingWorkout || currentSets.length === 0}
+                    >
+                        {common('save')}
+                    </Button>
+                </div>
 
-            <DatePickerComponent
-                selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
-            />
-
-            <AddSetFormComponent
-                exercises={exercises}
-                isLoadingExercises={isLoadingExercises}
-                fetchError={fetchError}
-                onAddSet={handleAddSet}
-                isAddingSet={isAddingSet}
-            />
-
-            <CurrentSetsTableComponent
-                currentSets={currentSets}
-                selectedDate={selectedDate}
-                onRemoveSet={handleRemoveSet}
-            />
-
-            <Button
-                onClick={handleSaveWorkout}
-                disabled={isSavingWorkout || currentSets.length === 0}
-                className="w-full text-lg py-6"
-                size="lg"
-            >
-                {isSavingWorkout ? common('loading') : common('save')}
-            </Button>
-        </div>
+                <CurrentSetsTableComponent
+                    currentSets={currentSets}
+                    selectedDate={selectedDate}
+                    onRemoveSet={handleRemoveSet}
+                />
+            </div>
+            <div className="fixed bottom-16 left-0 w-full z-10">
+                <div className="container mx-auto max-w-3xl px-4">
+                    <AddSetFormComponent
+                        exercises={exercises}
+                        isLoadingExercises={isLoadingExercises}
+                        fetchError={fetchError}
+                        onAddSet={handleAddSet}
+                        isAddingSet={isAddingSet}
+                    />
+                </div>
+            </div>
+        </>
     );
 }

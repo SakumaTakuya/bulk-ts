@@ -19,7 +19,7 @@ export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerCo
   const format = useFormatter();
 
   return (
-    <div className="mb-6">
+    <div>
       <Popover>
         <PopoverTrigger asChild>
           <Button
