@@ -1,7 +1,6 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from 'next/navigation';
-import { Toaster } from '@/components/ui/sonner';
 import Navigation from '@/components/Navigation';
 import AuthProvider from "@/components/providers/AuthProvider";
 import '../globals.css';

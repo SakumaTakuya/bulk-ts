@@ -1,6 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { redirect } from '@/i18n/navigation';
-import { locales, Locale } from '@/i18n/locale';
 import "./globals.css";
 
 export const viewport: Viewport = {

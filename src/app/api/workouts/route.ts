@@ -7,13 +7,13 @@ import prisma from '@/lib/prisma';
 
 // Define validation schema for a single set
 const setSchema = z.object({
-  exerciseId: z.string().cuid(), // Ensure it's a valid CUID
   reps: z.number().int().min(0), // Reps must be a non-negative integer
   weight: z.number().min(0), // Weight must be non-negative
 });
 
 // Define validation schema for the workout log request body
 const workoutLogSchema = z.object({
+  exerciseId: z.string().cuid(), // ExerciseId is now at the WorkoutLog level
   date: z.string().datetime(), // Expect ISO 8601 date string
   sets: z.array(setSchema).min(1), // Must have at least one set
 });
@@ -39,19 +39,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { date, sets } = validationResult.data;
+    const { exerciseId, date, sets } = validationResult.data;
 
     // --- Data Integrity Check (Optional but recommended) ---
-    // Verify that all exercise IDs belong to the current user
-    const exerciseIds = sets.map((set: z.infer<typeof setSchema>) => set.exerciseId); // Add type to set
-    const userExercisesCount = await prisma.exercise.count({
+    // Verify that the exerciseId belongs to the current user
+    const userExercise = await prisma.exercise.findFirst({
       where: {
-        id: { in: exerciseIds },
+        id: exerciseId,
         userId: userId,
       },
     });
-    if (userExercisesCount !== exerciseIds.length) {
-      return NextResponse.json({ error: 'One or more exercises not found or do not belong to the user' }, { status: 400 });
+    if (!userExercise) {
+      return NextResponse.json({ error: 'Exercise not found or does not belong to the user' }, { status: 400 });
     }
     // --- End Integrity Check ---
 
@@ -63,15 +62,15 @@ export async function POST(request: NextRequest) {
         data: {
           date: new Date(date), // Convert ISO string to Date object
           userId: userId,
+          exerciseId: exerciseId,
         },
       });
 
       // 2. Create all Set entries linked to the WorkoutLog
       await tx.set.createMany({
-        data: sets.map((set: z.infer<typeof setSchema>) => ({ // Add type to set
+        data: sets.map((set: z.infer<typeof setSchema>) => ({
           reps: set.reps,
           weight: set.weight,
-          exerciseId: set.exerciseId,
           workoutLogId: log.id, // Link to the created log
         })),
       });
@@ -84,7 +83,7 @@ export async function POST(request: NextRequest) {
     // Optionally fetch the full log with sets to return
     const fullLog = await prisma.workoutLog.findUnique({
       where: { id: newWorkoutLog.id },
-      include: { sets: { include: { exercise: true } } } // Include sets and their exercises
+      include: { sets: true } // No exercise relation in Set anymore
     });
 
 
@@ -139,10 +138,7 @@ export async function GET(request: NextRequest) {
         },
       },
       include: {
-        sets: { // Include the sets for each log
-          include: {
-            exercise: true, // Include the exercise details for each set
-          },
+        sets: {
           orderBy: {
             createdAt: 'asc', // Order sets by creation time within the log
           }

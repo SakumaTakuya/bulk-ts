@@ -70,7 +70,7 @@ model Exercise {
   userId String // Required: Each exercise belongs to a user
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) // If user deleted, their exercises are deleted
 
-  sets Set[] // Relation to sets using this exercise
+  workoutLogs WorkoutLog[] // Relation to workout logs using this exercise
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -85,12 +85,16 @@ model WorkoutLog {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) // If user deleted, logs are deleted
 
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade) // Each workout log is for one exercise
+
   sets Set[] // Relation to the sets performed in this log
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId, date]) // Index for efficient querying by user and date
+  @@index([exerciseId])
 }
 
 model Set {
@@ -101,12 +105,8 @@ model Set {
   workoutLogId String
   workoutLog   WorkoutLog @relation(fields: [workoutLogId], references: [id], onDelete: Cascade) // If log deleted, sets are deleted
 
-  exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade) // If exercise deleted, sets using it are deleted? Or restrict deletion? Let's cascade for now.
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([workoutLogId])
-  @@index([exerciseId])
 }

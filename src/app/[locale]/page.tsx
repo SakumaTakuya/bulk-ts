@@ -5,7 +5,6 @@ import { useSession, signIn } from 'next-auth/react';
 import { useAddSetFormStore } from '@/store/addSetFormStore';
 import { Button } from '@/components/ui/button';
 import { toast } from "sonner";
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { DatePickerComponent } from '@/components/home/DatePickerComponent';
 import { AddSetFormComponent } from '@/components/home/AddSetFormComponent';

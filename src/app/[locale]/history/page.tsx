@@ -82,7 +82,7 @@ export default function HistoryPage() {
         if (status === 'authenticated') {
             fetchWorkoutLogs();
         }
-    }, [selectedDate, status]);
+    }, [selectedDate, status, t]);
 
     if (status === 'loading') {
         return <div className="flex items-center justify-center min-h-screen">{common('loading')}</div>;

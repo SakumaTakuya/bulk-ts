@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 // Define the Exercise type locally or import if shared
 interface Exercise {
@@ -31,7 +32,7 @@ export function AddSetFormComponent({
   onAddSet,
   isAddingSet,
 }: AddSetFormComponentProps) {
-  let t = useTranslations('home');
+  const t = useTranslations('home');
 
   const {
     selectedExerciseId,
@@ -51,7 +52,7 @@ export function AddSetFormComponent({
         {isLoadingExercises && <div>{t('loadingExercises')}</div>}
         {fetchError && <div className="text-red-500">{fetchError}</div>}
         {!isLoadingExercises && exercises.length === 0 && !fetchError && (
-          <div>{t('noExercisesFound')} <a href="/exercises" className="text-blue-500 underline">{t('manageExercises')}</a></div>
+          <div>{t('noExercisesFound')} <Link href="/exercises" className="text-blue-500 underline">{t('manageExercises')}</Link></div>
         )}
         {!isLoadingExercises && exercises.length > 0 && (
           <>
