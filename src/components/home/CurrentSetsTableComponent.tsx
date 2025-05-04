@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2 } from "lucide-react";
 import dayjs from 'dayjs';
+import { useFormatter } from 'use-intl';
 
 // Define the structure for a set being displayed
 interface WorkoutSet {
@@ -28,6 +29,7 @@ export function CurrentSetsTableComponent({
   onRemoveSet,
 }: CurrentSetsTableComponentProps) {
   const t = useTranslations('home');
+  const format = useFormatter();
   if (currentSets.length === 0) {
     return null; // Don't render the table if there are no sets
   }
@@ -36,7 +38,7 @@ export function CurrentSetsTableComponent({
     <Card className="mb-6">
       <CardHeader>
         <CardTitle>
-          {t('currentSetsTitle', { date: selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : t('noDate') })}
+          {t('currentSetsTitle', { date: selectedDate ? format.dateTime(selectedDate) : t('noDate') })}
         </CardTitle>
       </CardHeader>
       <CardContent>

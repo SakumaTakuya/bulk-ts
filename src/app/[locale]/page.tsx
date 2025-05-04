@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { DatePickerComponent } from '@/components/home/DatePickerComponent';
 import { AddSetFormComponent } from '@/components/home/AddSetFormComponent';
 import { CurrentSetsTableComponent } from '@/components/home/CurrentSetsTableComponent';
+import { useFormatter } from 'use-intl';
 
 interface Exercise {
     id: string;
@@ -36,6 +37,7 @@ export default function HomePage() {
     // フックは常に同じ順序で呼び出す
     const t = useTranslations('home');
     const common = useTranslations('common');
+    const format = useFormatter();
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [isLoadingExercises, setIsLoadingExercises] = useState(false);
@@ -149,7 +151,7 @@ export default function HomePage() {
                 throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
-            toast.success(t('workoutSaved', { date: dayjs(selectedDate).format('YYYY-MM-DD') }));
+            toast.success(t('workoutSaved', { date: format.dateTime(selectedDate) }));
             setCurrentSets([]);
 
         } catch (err: unknown) {

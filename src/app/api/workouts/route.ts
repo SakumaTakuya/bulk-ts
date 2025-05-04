@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
   const userId = session.user.id;
 
   const { searchParams } = new URL(request.url);
-  const dateParam = searchParams.get('date'); // Expecting date in 'YYYY-MM-DD' format
+  const dateParam = searchParams.get('date');
 
   if (!dateParam) {
     return NextResponse.json({ error: 'Date query parameter is required' }, { status: 400 });

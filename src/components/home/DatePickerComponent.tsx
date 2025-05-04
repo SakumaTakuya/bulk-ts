@@ -8,6 +8,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
+import { useFormatter } from 'use-intl';
 
 interface DatePickerComponentProps {
   selectedDate: Date | undefined;
@@ -16,6 +17,8 @@ interface DatePickerComponentProps {
 
 export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerComponentProps) {
   const t = useTranslations('home');
+  const format = useFormatter();
+
   return (
     <div className="mb-6">
       <Popover>
@@ -28,7 +31,7 @@ export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerCo
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : <span>{t('pickADate')}</span>}
+            {selectedDate ? format.dateTime(selectedDate) : <span>{t('pickADate')}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
