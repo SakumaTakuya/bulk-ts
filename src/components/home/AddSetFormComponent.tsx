@@ -48,17 +48,17 @@ export function AddSetFormComponent({
         <CardTitle>{t("addSet")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {isLoadingExercises && <div>Loading exercises...</div>}
+        {isLoadingExercises && <div>{t('loadingExercises')}</div>}
         {fetchError && <div className="text-red-500">{fetchError}</div>}
         {!isLoadingExercises && exercises.length === 0 && !fetchError && (
-          <div>No exercises found. <a href="/exercises" className="text-blue-500 underline">Manage exercises</a> first.</div>
+          <div>{t('noExercisesFound')} <a href="/exercises" className="text-blue-500 underline">{t('manageExercises')}</a></div>
         )}
         {!isLoadingExercises && exercises.length > 0 && (
           <>
             {/* Use state and setters from the store */}
             <Select value={selectedExerciseId} onValueChange={setSelectedExerciseId}>
               <SelectTrigger>
-                <SelectValue placeholder="Select exercise" />
+                <SelectValue placeholder={t('selectExercise')} />
               </SelectTrigger>
               <SelectContent>
                 {exercises.map((exercise) => (
@@ -71,7 +71,7 @@ export function AddSetFormComponent({
             <div className="flex gap-4">
               <Input
                 type="number"
-                placeholder="Reps"
+                placeholder={t('reps')}
                 value={currentReps}
                 onChange={(e) => setCurrentReps(e.target.value)} // Use store setter
                 min="0"
@@ -81,7 +81,7 @@ export function AddSetFormComponent({
               />
               <Input
                 type="number"
-                placeholder="Weight (kg)"
+                placeholder={`${t('weight')} (kg)`}
                 value={currentWeight}
                 onChange={(e) => setCurrentWeight(e.target.value)} // Use store setter
                 min="0"

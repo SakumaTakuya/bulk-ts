@@ -13,8 +13,22 @@
         "date": "日付",
         "add": "追加",
         "currentSets": "現在のセット",
+        "currentSetsTitle": "現在のセット（{date}）",
+        "noDate": "日付未選択",
+        "actions": "操作",
         "noSets": "まだセットが追加されていません",
-        "adding": "追加中..."
+        "adding": "追加中...",
+        "invalidSetInput": "エクササイズを選択し、有効な回数・重量（0以上の数値）を入力してください。",
+        "setAdded": "セット追加: {name} {reps}回 {weight}kg",
+        "setRemoved": "セットを削除しました。",
+        "pleaseSelectDate": "ワークアウトの日付を選択してください。",
+        "pleaseAddSet": "ワークアウトを保存するにはセットを1つ以上追加してください。",
+        "workoutSaved": "{date} のワークアウトを保存しました！",
+        "failedToSaveWorkout": "ワークアウトの保存に失敗しました。",
+        "loadingExercises": "エクササイズを読み込み中...",
+        "noExercisesFound": "エクササイズが見つかりません。",
+        "manageExercises": "エクササイズを管理",
+        "selectExercise": "エクササイズを選択"
     },
     "exercises": {
         "title": "エクササイズ",
@@ -38,7 +52,7 @@
         "signIn": "サインイン",
         "signOut": "サインアウト",
         "loading": "読み込み中...",
-        "unauthenticated": "認証されていません"
+        "pickADate": "日付を選択"
     },
     "notFound": {
         "title": "404 - ページが見つかりません",

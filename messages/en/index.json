@@ -13,8 +13,22 @@
         "date": "Date",
         "add": "Add",
         "currentSets": "Current Sets",
+        "currentSetsTitle": "Current Sets ({date})",
+        "noDate": "No date",
+        "actions": "Actions",
         "noSets": "No sets added yet",
-        "adding": "Adding..."
+        "adding": "Adding...",
+        "invalidSetInput": "Please select an exercise and enter valid reps/weight (non-negative numbers).",
+        "setAdded": "Set added: {name} {reps} reps @ {weight}kg",
+        "setRemoved": "Set removed.",
+        "pleaseSelectDate": "Please select a date for the workout.",
+        "pleaseAddSet": "Please add at least one set to save the workout.",
+        "workoutSaved": "Workout for {date} saved successfully!",
+        "failedToSaveWorkout": "Failed to save workout.",
+        "loadingExercises": "Loading exercises...",
+        "noExercisesFound": "No exercises found.",
+        "manageExercises": "Manage exercises",
+        "selectExercise": "Select exercise"
     },
     "exercises": {
         "title": "Exercises",
@@ -35,8 +49,10 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "edit": "Edit",
+        "signIn": "Sign In",
         "signOut": "Sign Out",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "pickADate": "Pick a date"
     },
     "notFound": {
         "title": "404 - Page Not Found",

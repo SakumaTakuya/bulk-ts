@@ -89,7 +89,7 @@ export default function HomePage() {
         const selectedExercise = exercises.find(ex => ex.id === selectedExerciseId);
 
         if (!selectedExercise || isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) {
-            toast.error("Please select an exercise and enter valid reps/weight (non-negative numbers).");
+            toast.error(t('invalidSetInput'));
             return;
         }
 
@@ -107,21 +107,21 @@ export default function HomePage() {
 
         resetForm();
         setIsAddingSet(false);
-        toast.success(`Set added: ${selectedExercise.name} ${repsNum} reps @ ${weightNum}kg`);
+        toast.success(t('setAdded', { name: selectedExercise.name, reps: repsNum, weight: weightNum }));
     };
 
     const handleRemoveSet = (tempIdToRemove: string) => {
         setCurrentSets(prevSets => prevSets.filter(set => set.tempId !== tempIdToRemove));
-        toast.info("Set removed.");
+        toast.info(t('setRemoved'));
     };
 
     const handleSaveWorkout = async () => {
         if (!selectedDate) {
-            toast.error("Please select a date for the workout.");
+            toast.error(t('pleaseSelectDate'));
             return;
         }
         if (currentSets.length === 0) {
-            toast.error("Please add at least one set to save the workout.");
+            toast.error(t('pleaseAddSet'));
             return;
         }
 
@@ -149,14 +149,14 @@ export default function HomePage() {
                 throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
-            toast.success(`Workout for ${dayjs(selectedDate).format('YYYY-MM-DD')} saved successfully!`);
+            toast.success(t('workoutSaved', { date: dayjs(selectedDate).format('YYYY-MM-DD') }));
             setCurrentSets([]);
 
         } catch (err: unknown) {
             console.error("Failed to save workout:", err);
             const fetchError = err as FetchError;
-            setFetchError(fetchError.message || 'Failed to save workout.');
-            toast.error(fetchError.message || 'Failed to save workout.');
+            setFetchError(fetchError.message || t('failedToSaveWorkout'));
+            toast.error(fetchError.message || t('failedToSaveWorkout'));
         } finally {
             setIsSavingWorkout(false);
         }
@@ -170,8 +170,7 @@ export default function HomePage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
                 <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
-                <p className="mb-4">Please sign in to record your workouts.</p>
-                <Button onClick={() => signIn('google')}>Sign in with Google</Button>
+                <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
             </div>
         );
     }
@@ -205,7 +204,7 @@ export default function HomePage() {
                 className="w-full text-lg py-6"
                 size="lg"
             >
-                {isSavingWorkout ? 'Saving...' : common('save')}
+                {isSavingWorkout ? common('loading') : common('save')}
             </Button>
         </div>
     );

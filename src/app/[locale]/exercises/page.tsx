@@ -109,8 +109,8 @@ export default function ExercisesPage() {
     if (status === 'unauthenticated') {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
-                <p className="mb-4">Please sign in to manage exercises.</p>
-                <Button onClick={() => signIn('google')}>Sign in with Google</Button>
+                <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
+                <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
             </div>
         );
     }

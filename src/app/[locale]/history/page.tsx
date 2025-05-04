@@ -92,10 +92,7 @@ export default function HistoryPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
                 <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
-                <p className="mb-4">
-                    {t('unauthenticated')}
-                </p>
-                <Button onClick={() => signIn('google')}>{t("signIn")}</Button>
+                <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
             </div>
         );
     }
