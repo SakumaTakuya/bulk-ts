@@ -103,7 +103,7 @@ export default function ExercisesPage() {
     };
 
     if (status === 'loading') {
-        return <div>Loading session...</div>;
+        return <div>{common("loading")}</div>;
     }
 
     if (status === 'unauthenticated') {
@@ -118,10 +118,6 @@ export default function ExercisesPage() {
     // 認証済みビュー
     return (
         <div className="container mx-auto p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">{t('title')}</h1>
-            </div>
-
             <Card className="mb-6">
                 <CardHeader>
                     <CardTitle>{t('addExercise')}</CardTitle>

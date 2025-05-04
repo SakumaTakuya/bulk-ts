@@ -32,7 +32,7 @@ export default async function LocaleLayout({
     return (
         <html lang={locale}>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <NextIntlClientProvider locale={locale}>
+                <NextIntlClientProvider>
                     <Navigation />
                     <main className="container mx-auto p-4 mb-20 lg:mb-0">
                         <AuthProvider>{children}</AuthProvider>

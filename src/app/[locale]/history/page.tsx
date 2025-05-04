@@ -104,8 +104,6 @@ export default function HistoryPage() {
     return (
         <div className="container mx-auto p-4 max-w-4xl">
             <Toaster richColors position="top-center" />
-            <h1 className="text-3xl font-bold mb-6 text-center">{t('title')}</h1>
-
             <div className="flex flex-col md:flex-row gap-6">
                 {/* カレンダー */}
                 <div className="flex justify-center md:justify-start">
@@ -125,7 +123,7 @@ export default function HistoryPage() {
                         {selectedDate ? format.dateTime(selectedDate) : t('selectDate')}
                     </h2>
                     {isLoading && <div>{common("loading")}</div>}
-                    {error && <div className="text-red-500">エラー: {error}</div>}
+                    {error && <div className="text-red-500">{error}</div>}
                     {!isLoading && !error && workoutLogs.length === 0 && (
                         <div>{t('noWorkouts')}</div>
                     )}
