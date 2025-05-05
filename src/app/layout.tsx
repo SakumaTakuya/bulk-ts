@@ -1,6 +1,5 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { Geist, Geist_Mono } from "next/font/google";
-import { notFound } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import AuthProvider from "@/components/providers/AuthProvider";
 import './globals.css';
