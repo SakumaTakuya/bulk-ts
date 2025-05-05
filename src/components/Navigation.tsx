@@ -34,7 +34,7 @@ export default function Navigation() {
   return (
     <div className="w-full">
       {/* デスクトップナビゲーション - lg(1024px)以上で表示 */}
-      <nav className="hidden lg:flex justify-between items-center p-4 bg-white border-b">
+      <nav className="hidden lg:flex justify-between items-center p-4 border-b">
         <div className="font-bold text-xl">ブランドロゴ</div>
         <div className="flex space-x-6">
           {navLinks.map((link) => (
@@ -57,51 +57,12 @@ export default function Navigation() {
       </nav>
 
       {/* モバイルナビゲーション - lg(1024px)未満で表示 */}
-      <div className="lg:hidden flex justify-between items-center p-4 bg-white border-b">
+      <div className="lg:hidden flex justify-between items-center p-4 border-b">
         <div className="font-bold text-xl">ブランドロゴ</div>
-
-        {/* ハンバーガーメニュー */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu size={24} />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-64">
-            <SheetTitle className="text-lg font-semibold"></SheetTitle>
-            <div className="flex flex-col h-full">
-              <div className="flex justify-between items-center py-4">
-                <h2 className="text-lg font-semibold">メニュー</h2>
-              </div>
-
-              <nav className="flex flex-col gap-4 pt-4">
-                {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href}>
-                    <Button
-                      variant={isActivePath(link.href) ? "default" : "ghost"}
-                      className="flex justify-start items-center gap-4 w-full"
-                      aria-current={isActivePath(link.href) ? "page" : undefined}
-                    >
-                      {link.icon}
-                      <span>{link.name}</span>
-                    </Button>
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="mt-auto pt-4 pb-2">
-                <LocaleSwitcher />
-              </div>
-
-              <div className="pt-2 pb-8">
-                <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
-              </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+        <LocaleSwitcher />
       </div>
       {/* モバイル用フッターナビゲーション */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center p-2 z-10 h-[72px]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 border-t flex justify-around items-center p-2 z-10 h-[72px]">
         {navLinks.map((link) => (
           <Link key={link.href} href={link.href}>
             <Button
@@ -115,6 +76,20 @@ export default function Navigation() {
             </Button>
           </Link>
         ))}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom">
+            <SheetTitle className="text-lg font-semibold"></SheetTitle>
+            <div className="flex flex-col h-full p-4 gap-2">
+              <h2 className="text-lg font-semibold">メニュー</h2>
+              <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   );

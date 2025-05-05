@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Toaster, toast } from "sonner";
 import dayjs from 'dayjs';
 import { useFormatter } from 'next-intl';
 
@@ -66,14 +65,10 @@ export default function HistoryPage() {
                 }
                 const data: WorkoutLogWithSets[] = await response.json();
                 setWorkoutLogs(data);
-                if (data.length === 0) {
-                    toast.info(t('noWorkouts'));
-                }
             } catch (err: unknown) {
                 console.error("Failed to fetch workout logs:", err);
                 const fetchError = err as FetchError;
                 setError(fetchError.message || t("failedToLoad"));
-                toast.error(fetchError.message || t("failedToLoad"));
             } finally {
                 setIsLoading(false);
             }
@@ -100,7 +95,6 @@ export default function HistoryPage() {
     // 認証済みビュー
     return (
         <div className="container mx-auto p-4 max-w-4xl">
-            <Toaster richColors position="top-center" />
             <div className="flex flex-col md:flex-row gap-6">
                 {/* カレンダー */}
                 <div className="flex justify-center md:justify-start">
