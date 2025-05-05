@@ -8,8 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
-
+import Link from 'next/link';
 // Define the Exercise type locally or import if shared
 interface Exercise {
   id: string;

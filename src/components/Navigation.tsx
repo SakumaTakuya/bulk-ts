@@ -3,8 +3,6 @@
 import React from 'react';
 import { Menu, Home, Dumbbell, History } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
-import LocaleSwitcher from '@/components/LocaleSwitcher';
 import {
   Sheet,
   SheetContent,
@@ -14,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -52,7 +52,6 @@ export default function Navigation() {
           ))}
         </div>
         <div className="flex items-center gap-4">
-          <LocaleSwitcher />
           <Button variant="outline" onClick={() => signOut()}>{common('signOut')}</Button>
         </div>
       </nav>
@@ -60,7 +59,6 @@ export default function Navigation() {
       {/* モバイルナビゲーション - lg(1024px)未満で表示 */}
       <div className="lg:hidden flex justify-between items-center p-4 border-b">
         <Image src="/bland-image.png" alt="Brand Logo" width={64} height={64} className='w-10' />
-        <LocaleSwitcher />
       </div>
       {/* モバイル用フッターナビゲーション */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 border-t flex justify-around items-center p-2 z-10 h-[72px]">
