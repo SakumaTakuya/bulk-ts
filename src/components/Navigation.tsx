@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -35,7 +36,7 @@ export default function Navigation() {
     <div className="w-full">
       {/* デスクトップナビゲーション - lg(1024px)以上で表示 */}
       <nav className="hidden lg:flex justify-between items-center p-4 border-b">
-        <div className="font-bold text-xl">ブランドロゴ</div>
+        <Image src="/bland-image.png" alt="Brand Logo" width={64} height={64} className='w-10' />
         <div className="flex space-x-6">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href}>
@@ -58,7 +59,7 @@ export default function Navigation() {
 
       {/* モバイルナビゲーション - lg(1024px)未満で表示 */}
       <div className="lg:hidden flex justify-between items-center p-4 border-b">
-        <div className="font-bold text-xl">ブランドロゴ</div>
+        <Image src="/bland-image.png" alt="Brand Logo" width={64} height={64} className='w-10' />
         <LocaleSwitcher />
       </div>
       {/* モバイル用フッターナビゲーション */}

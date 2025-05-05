@@ -30,7 +30,7 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale}>
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark m-safe`}>
                 <NextIntlClientProvider>
                     <Navigation />
                     <main className="container mx-auto p-4 mb-20 lg:mb-0">
