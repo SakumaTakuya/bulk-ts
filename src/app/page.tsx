@@ -99,7 +99,7 @@ export default function HomePage() {
             return;
         }
         // 既存エクササイズ検索（大文字小文字区別なし完全一致）
-        let exercise = exercises.find(
+        const exercise = exercises.find(
             ex => ex.name.toLowerCase() === trimmedInput.toLowerCase()
         );
         let exerciseId = exercise?.id;

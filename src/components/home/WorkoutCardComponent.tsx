@@ -95,7 +95,7 @@ function SetRow({
                         </div>
                     ),
                 },
-            } as any}
+            }}
         >
             <div className="flex items-center gap-4 mb-1 transition-colors w-full">
                 <div className="flex-1">{set.reps} {t('reps')}</div>
