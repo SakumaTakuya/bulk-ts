@@ -21,5 +21,6 @@
   "lang": "ja",
   "name": "Workout Tracker",
   "short_name": "WorkoutApp",
-  "start_url": "/"
+  "start_url": "/",
+  "scope": "/workout_tracker/"
 }

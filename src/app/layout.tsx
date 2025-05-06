@@ -19,6 +19,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: 'Workout Tracker',
     description: 'Track your workouts',
+    manifest: "/manifest.json",
+    applicationName: "Workout Tracker",
     appleWebApp: {
         capable: true,
         title: "Workout Tracker",
