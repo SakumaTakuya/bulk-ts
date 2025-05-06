@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navigation from '@/components/Navigation';
 import AuthProvider from "@/components/providers/AuthProvider";
 import './globals.css';
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getLocale } from 'next-intl/server';
 
 const geistSans = Geist({
@@ -25,6 +25,10 @@ export const metadata: Metadata = {
         startupImage: "/bland-image.png",
         statusBarStyle: "black-translucent"
     }
+};
+
+export const viewport: Viewport = {
+    themeColor: "black",
 };
 
 export default async function LocaleLayout({
