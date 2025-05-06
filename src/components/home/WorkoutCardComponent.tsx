@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2, PlusCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface WorkoutSet {
     tempId: string;
@@ -31,6 +32,7 @@ export function WorkoutCardComponent({
 }: WorkoutCardProps) {
     const [reps, setReps] = useState('');
     const [weight, setWeight] = useState('');
+    const t = useTranslations('home');
 
     const handleAddSet = () => {
         const repsNum = parseInt(reps, 10);
@@ -51,11 +53,11 @@ export function WorkoutCardComponent({
             </CardHeader>
             <CardContent>
                 <div className="mb-2">
-                    {sets.length === 0 && <div className="text-muted-foreground text-sm">セットがありません</div>}
+                    {sets.length === 0 && <div className="text-muted-foreground text-sm">{t('noSetsInWorkout')}</div>}
                     {sets.map((set) => (
                         <div key={set.tempId} className="flex items-center gap-4 mb-2">
-                            <div className="flex-1">{set.reps} 回</div>
-                            <div className="flex-1">{set.weight} kg</div>
+                            <div className="flex-1">{set.reps} {t('reps')}</div>
+                            <div className="flex-1">{set.weight} {t('weight')} (kg)</div>
                             <Button variant="ghost" size="icon" onClick={() => onRemoveSet(exerciseId, set.tempId)}>
                                 <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
@@ -65,7 +67,7 @@ export function WorkoutCardComponent({
                 <div className="flex gap-2 mt-2">
                     <Input
                         type="number"
-                        placeholder="回数"
+                        placeholder={t('reps')}
                         value={reps}
                         onChange={e => setReps(e.target.value)}
                         min="0"
@@ -74,17 +76,22 @@ export function WorkoutCardComponent({
                     />
                     <Input
                         type="number"
-                        placeholder="重量"
+                        placeholder={t('weight')}
                         value={weight}
                         onChange={e => setWeight(e.target.value)}
                         min="0"
                         step="0.5"
                         className="flex-1"
                     />
-                    <Button onClick={handleAddSet} disabled={!reps || !weight}>
-                        <PlusCircle className="mr-1 h-4 w-4" /> 行追加
-                    </Button>
                 </div>
+                <Button
+                    onClick={handleAddSet}
+                    disabled={!reps || !weight}
+                    size="sm"
+                    className="mt-1 w-full"
+                >
+                    <PlusCircle className="mr-1 h-4 w-4" /> {t('addRow')}
+                </Button>
             </CardContent>
         </Card>
     );
