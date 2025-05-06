@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSession, signIn } from 'next-auth/react';
-import { useAddSetFormStore } from '@/store/addSetFormStore';
 import { Button } from '@/components/ui/button';
 import { toast } from "sonner";
 import { useTranslations } from 'next-intl';
 import { DatePickerComponent } from '@/components/home/DatePickerComponent';
-import { AddSetFormComponent } from '@/components/home/AddSetFormComponent';
-import { CurrentSetsTableComponent } from '@/components/home/CurrentSetsTableComponent';
+import { WorkoutCardComponent } from '@/components/home/WorkoutCardComponent';
+import { Input } from '@/components/ui/input';
+import { PlusCircle } from "lucide-react";
 import { useFormatter } from 'use-intl';
 
 interface Exercise {
@@ -21,10 +21,14 @@ interface Exercise {
 
 interface WorkoutSet {
     tempId: string;
-    exerciseId: string;
-    exerciseName: string;
     reps: number;
     weight: number;
+}
+
+interface Workout {
+    exerciseId: string;
+    exerciseName: string;
+    sets: WorkoutSet[];
 }
 
 interface FetchError extends Error {
@@ -33,7 +37,6 @@ interface FetchError extends Error {
 
 export default function HomePage() {
     const { status } = useSession();
-    // フックは常に同じ順序で呼び出す
     const t = useTranslations('home');
     const common = useTranslations('common');
     const format = useFormatter();
@@ -43,20 +46,22 @@ export default function HomePage() {
     const [fetchError, setFetchError] = useState<string | null>(null);
 
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-    const [currentSets, setCurrentSets] = useState<WorkoutSet[]>([]);
-    const [isAddingSet, setIsAddingSet] = useState(false);
+    const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [isSavingWorkout, setIsSavingWorkout] = useState(false);
 
-    // エクササイズ名入力用
+    // ワークアウト追加用
     const [exerciseInput, setExerciseInput] = useState('');
+    const [isFocused, setIsFocused] = useState(false);
 
-    const {
-        currentReps,
-        currentWeight,
-        resetForm,
-    } = useAddSetFormStore();
+    // サジェスト候補
+    const filteredExercises = useMemo(
+        () =>
+            exercises.filter((ex) =>
+                ex.name.toLowerCase().includes(exerciseInput.toLowerCase())
+            ),
+        [exercises, exerciseInput]
+    );
 
-    // ステート更新用の関数をuseEffectの中に移動
     useEffect(() => {
         const fetchExercises = async () => {
             if (status !== 'authenticated') return;
@@ -86,20 +91,15 @@ export default function HomePage() {
         }
     }, [status]);
 
-    const handleAddSet = async () => {
-        const repsNum = parseInt(currentReps, 10);
-        const weightNum = parseFloat(currentWeight);
+    // ワークアウト追加
+    const handleAddWorkout = async () => {
         const trimmedInput = exerciseInput.trim();
-
-        if (!trimmedInput || isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) {
+        if (!trimmedInput) {
             toast.error(t('invalidSetInput'));
             return;
         }
-
-        setIsAddingSet(true);
-
         // 既存エクササイズ検索（大文字小文字区別なし完全一致）
-        const exercise = exercises.find(
+        let exercise = exercises.find(
             ex => ex.name.toLowerCase() === trimmedInput.toLowerCase()
         );
         let exerciseId = exercise?.id;
@@ -120,7 +120,6 @@ export default function HomePage() {
                 const newExercise: Exercise = await res.json();
                 exerciseId = newExercise.id;
                 exerciseName = newExercise.name;
-                // exercisesリストにも即時反映
                 setExercises(prev => [...prev, newExercise]);
             } catch (err: unknown) {
                 if (err && typeof err === "object" && "message" in err) {
@@ -128,38 +127,80 @@ export default function HomePage() {
                 } else {
                     toast.error(t('failedToAddExercise'));
                 }
-                setIsAddingSet(false);
                 return;
             }
         }
 
-        const newSet: WorkoutSet = {
-            tempId: crypto.randomUUID(),
-            exerciseId: exerciseId!,
-            exerciseName,
-            reps: repsNum,
-            weight: weightNum,
-        };
+        // 既に同じエクササイズのワークアウトが存在する場合は追加しない
+        if (workouts.some(w => w.exerciseId === exerciseId)) {
+            toast.info(t('alreadyAddedWorkout'));
+            setExerciseInput('');
+            return;
+        }
 
-        setCurrentSets(prevSets => [...prevSets, newSet]);
-
-        resetForm();
+        setWorkouts(prev => [
+            ...prev,
+            {
+                exerciseId: exerciseId!,
+                exerciseName,
+                sets: [],
+            }
+        ]);
         setExerciseInput('');
-        setIsAddingSet(false);
-        toast.success(t('setAdded', { name: exerciseName, reps: repsNum, weight: weightNum }));
+        toast.success(t('workoutAdded', { name: exerciseName }));
     };
 
-    const handleRemoveSet = (tempIdToRemove: string) => {
-        setCurrentSets(prevSets => prevSets.filter(set => set.tempId !== tempIdToRemove));
-        toast.info(t('setRemoved'));
+    // 各ワークアウト内でセット追加
+    const handleAddSet = (exerciseId: string, reps: number, weight: number) => {
+        setWorkouts(prev =>
+            prev.map(w =>
+                w.exerciseId === exerciseId
+                    ? {
+                        ...w,
+                        sets: [
+                            ...w.sets,
+                            {
+                                tempId: crypto.randomUUID(),
+                                reps,
+                                weight,
+                            }
+                        ]
+                    }
+                    : w
+            )
+        );
     };
 
+    // 各ワークアウト内でセット削除
+    const handleRemoveSet = (exerciseId: string, tempId: string) => {
+        setWorkouts(prev =>
+            prev.map(w =>
+                w.exerciseId === exerciseId
+                    ? { ...w, sets: w.sets.filter(set => set.tempId !== tempId) }
+                    : w
+            )
+        );
+    };
+
+    // ワークアウト削除
+    const handleRemoveWorkout = (exerciseId: string) => {
+        setWorkouts(prev => prev.filter(w => w.exerciseId !== exerciseId));
+    };
+
+    // 保存
     const handleSaveWorkout = async () => {
         if (!selectedDate) {
             toast.error(t('pleaseSelectDate'));
             return;
         }
-        if (currentSets.length === 0) {
+        const allSets = workouts.flatMap(w =>
+            w.sets.map(set => ({
+                exerciseId: w.exerciseId,
+                reps: set.reps,
+                weight: set.weight,
+            }))
+        );
+        if (allSets.length === 0) {
             toast.error(t('pleaseAddSet'));
             return;
         }
@@ -169,11 +210,7 @@ export default function HomePage() {
 
         const workoutData = {
             date: selectedDate.toISOString(),
-            sets: currentSets.map(({ exerciseId, reps, weight }) => ({
-                exerciseId,
-                reps,
-                weight,
-            })),
+            sets: allSets,
         };
 
         try {
@@ -189,7 +226,7 @@ export default function HomePage() {
             }
 
             toast.success(t('workoutSaved', { date: format.dateTime(selectedDate) }));
-            setCurrentSets([]);
+            setWorkouts([]);
 
         } catch (err: unknown) {
             console.error("Failed to save workout:", err);
@@ -226,29 +263,72 @@ export default function HomePage() {
                     </div>
                     <Button
                         onClick={handleSaveWorkout}
-                        disabled={isSavingWorkout || currentSets.length === 0}
+                        disabled={isSavingWorkout || workouts.flatMap(w => w.sets).length === 0}
                     >
                         {common('save')}
                     </Button>
                 </div>
 
-                <CurrentSetsTableComponent
-                    currentSets={currentSets}
-                    selectedDate={selectedDate}
-                    onRemoveSet={handleRemoveSet}
-                />
+                {/* ワークアウトカードリスト */}
+                {workouts.map(w => (
+                    <WorkoutCardComponent
+                        key={w.exerciseId}
+                        exerciseId={w.exerciseId}
+                        exerciseName={w.exerciseName}
+                        sets={w.sets}
+                        onAddSet={handleAddSet}
+                        onRemoveSet={handleRemoveSet}
+                        onRemoveWorkout={handleRemoveWorkout}
+                    />
+                ))}
             </div>
+            {/* ワークアウト追加フォーム */}
             <div className="fixed bottom-16 left-0 w-full z-10">
                 <div className="container mx-auto max-w-3xl px-4">
-                    <AddSetFormComponent
-                        exercises={exercises}
-                        isLoadingExercises={isLoadingExercises}
-                        fetchError={fetchError}
-                        onAddSet={handleAddSet}
-                        isAddingSet={isAddingSet}
-                        exerciseInput={exerciseInput}
-                        setExerciseInput={setExerciseInput}
-                    />
+                    <div className="mb-6">
+                        <div className="relative">
+                            <Input
+                                type="text"
+                                placeholder={t('exerciseName')}
+                                value={exerciseInput}
+                                onChange={e => setExerciseInput(e.target.value)}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                                autoComplete="off"
+                                className="w-full"
+                                data-testid="exercise-input"
+                            />
+                            {isFocused && exerciseInput && filteredExercises.length > 0 && (
+                                <ul className="absolute z-20 bg-accent border-collapse w-full mt-1 max-h-40 overflow-auto rounded shadow">
+                                    {filteredExercises.map((ex) => (
+                                        <li
+                                            key={ex.id}
+                                            className="relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                            onMouseDown={e => e.preventDefault()}
+                                            onClick={() => {
+                                                setExerciseInput(ex.name);
+                                                setIsFocused(false);
+                                            }}
+                                        >
+                                            {ex.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <Button
+                            onClick={handleAddWorkout}
+                            disabled={isLoadingExercises || !exerciseInput.trim()}
+                            className="w-full mt-2"
+                        >
+                            <PlusCircle className="mr-2 h-4 w-4" /> {t("addWorkout")}
+                        </Button>
+                        {isLoadingExercises && <div className="mt-2">{t('loadingExercises')}</div>}
+                        {fetchError && <div className="mt-2 text-red-500">{fetchError}</div>}
+                        {!isLoadingExercises && exercises.length === 0 && !fetchError && (
+                            <div className="mt-2">{t('noExercisesFound')}</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

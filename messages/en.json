@@ -29,7 +29,12 @@
         "noExercisesFound": "No exercises found.",
         "manageExercises": "Manage exercises",
         "selectExercise": "Select exercise",
-        "exerciseName": "Exercise Name"
+        "exerciseName": "Exercise Name",
+        "addWorkout": "Add Workout",
+        "workoutAdded": "Workout \"{name}\" added.",
+        "alreadyAddedWorkout": "This workout has already been added.",
+        "addRow": "Add Row",
+        "noSetsInWorkout": "No sets"
     },
     "exercises": {
         "title": "Exercises",

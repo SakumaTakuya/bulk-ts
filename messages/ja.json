@@ -29,7 +29,12 @@
         "noExercisesFound": "エクササイズが見つかりません。",
         "manageExercises": "エクササイズを管理",
         "selectExercise": "エクササイズを選択",
-        "exerciseName": "エクササイズ名"
+        "exerciseName": "エクササイズ名",
+        "addWorkout": "ワークアウト追加",
+        "workoutAdded": "ワークアウト「{name}」を追加しました。",
+        "alreadyAddedWorkout": "このワークアウトは既に追加されています。",
+        "addRow": "行追加",
+        "noSetsInWorkout": "セットがありません"
     },
     "exercises": {
         "title": "エクササイズ",
