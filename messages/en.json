@@ -28,7 +28,8 @@
         "loadingExercises": "Loading exercises...",
         "noExercisesFound": "No exercises found.",
         "manageExercises": "Manage exercises",
-        "selectExercise": "Select exercise"
+        "selectExercise": "Select exercise",
+        "exerciseName": "Exercise Name"
     },
     "exercises": {
         "title": "Exercises",

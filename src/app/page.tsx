@@ -47,8 +47,10 @@ export default function HomePage() {
     const [isAddingSet, setIsAddingSet] = useState(false);
     const [isSavingWorkout, setIsSavingWorkout] = useState(false);
 
+    // エクササイズ名入力用
+    const [exerciseInput, setExerciseInput] = useState('');
+
     const {
-        selectedExerciseId,
         currentReps,
         currentWeight,
         resetForm,
@@ -84,22 +86,57 @@ export default function HomePage() {
         }
     }, [status]);
 
-    const handleAddSet = () => {
+    const handleAddSet = async () => {
         const repsNum = parseInt(currentReps, 10);
         const weightNum = parseFloat(currentWeight);
-        const selectedExercise = exercises.find(ex => ex.id === selectedExerciseId);
+        const trimmedInput = exerciseInput.trim();
 
-        if (!selectedExercise || isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) {
+        if (!trimmedInput || isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) {
             toast.error(t('invalidSetInput'));
             return;
         }
 
         setIsAddingSet(true);
 
+        // 既存エクササイズ検索（大文字小文字区別なし完全一致）
+        const exercise = exercises.find(
+            ex => ex.name.toLowerCase() === trimmedInput.toLowerCase()
+        );
+        let exerciseId = exercise?.id;
+        let exerciseName = trimmedInput;
+
+        // 未登録なら新規作成
+        if (!exercise) {
+            try {
+                const res = await fetch('/api/exercises', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: trimmedInput }),
+                });
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
+                }
+                const newExercise: Exercise = await res.json();
+                exerciseId = newExercise.id;
+                exerciseName = newExercise.name;
+                // exercisesリストにも即時反映
+                setExercises(prev => [...prev, newExercise]);
+            } catch (err: unknown) {
+                if (err && typeof err === "object" && "message" in err) {
+                    toast.error((err as { message?: string }).message || t('failedToAddExercise'));
+                } else {
+                    toast.error(t('failedToAddExercise'));
+                }
+                setIsAddingSet(false);
+                return;
+            }
+        }
+
         const newSet: WorkoutSet = {
             tempId: crypto.randomUUID(),
-            exerciseId: selectedExerciseId,
-            exerciseName: selectedExercise.name,
+            exerciseId: exerciseId!,
+            exerciseName,
             reps: repsNum,
             weight: weightNum,
         };
@@ -107,8 +144,9 @@ export default function HomePage() {
         setCurrentSets(prevSets => [...prevSets, newSet]);
 
         resetForm();
+        setExerciseInput('');
         setIsAddingSet(false);
-        toast.success(t('setAdded', { name: selectedExercise.name, reps: repsNum, weight: weightNum }));
+        toast.success(t('setAdded', { name: exerciseName, reps: repsNum, weight: weightNum }));
     };
 
     const handleRemoveSet = (tempIdToRemove: string) => {
@@ -208,6 +246,8 @@ export default function HomePage() {
                         fetchError={fetchError}
                         onAddSet={handleAddSet}
                         isAddingSet={isAddingSet}
+                        exerciseInput={exerciseInput}
+                        setExerciseInput={setExerciseInput}
                     />
                 </div>
             </div>

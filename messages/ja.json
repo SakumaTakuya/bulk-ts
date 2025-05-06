@@ -28,7 +28,8 @@
         "loadingExercises": "エクササイズを読み込み中...",
         "noExercisesFound": "エクササイズが見つかりません。",
         "manageExercises": "エクササイズを管理",
-        "selectExercise": "エクササイズを選択"
+        "selectExercise": "エクササイズを選択",
+        "exerciseName": "エクササイズ名"
     },
     "exercises": {
         "title": "エクササイズ",
