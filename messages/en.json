@@ -34,7 +34,10 @@
         "workoutAdded": "Workout \"{name}\" added.",
         "alreadyAddedWorkout": "This workout has already been added.",
         "addRow": "Add Row",
-        "noSetsInWorkout": "No sets"
+        "noSetsInWorkout": "No sets",
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel"
     },
     "exercises": {
         "title": "Exercises",

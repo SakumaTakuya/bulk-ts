@@ -34,7 +34,10 @@
         "workoutAdded": "ワークアウト「{name}」を追加しました。",
         "alreadyAddedWorkout": "このワークアウトは既に追加されています。",
         "addRow": "行追加",
-        "noSetsInWorkout": "セットがありません"
+        "noSetsInWorkout": "セットがありません",
+        "edit": "編集",
+        "save": "保存",
+        "cancel": "キャンセル"
     },
     "exercises": {
         "title": "エクササイズ",

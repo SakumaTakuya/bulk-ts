@@ -279,6 +279,22 @@ export default function HomePage() {
                         onAddSet={handleAddSet}
                         onRemoveSet={handleRemoveSet}
                         onRemoveWorkout={handleRemoveWorkout}
+                        onEditSet={(exerciseId, tempId, reps, weight) => {
+                            setWorkouts(prev =>
+                                prev.map(wo =>
+                                    wo.exerciseId === exerciseId
+                                        ? {
+                                            ...wo,
+                                            sets: wo.sets.map(set =>
+                                                set.tempId === tempId
+                                                    ? { ...set, reps, weight }
+                                                    : set
+                                            )
+                                        }
+                                        : wo
+                                )
+                            );
+                        }}
                     />
                 ))}
             </div>

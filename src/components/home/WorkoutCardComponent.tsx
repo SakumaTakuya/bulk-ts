@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, PlusCircle } from 'lucide-react';
+import { Trash2, PlusCircle, Pencil, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface WorkoutSet {
@@ -20,6 +20,76 @@ interface WorkoutCardProps {
     onAddSet: (exerciseId: string, reps: number, weight: number) => void;
     onRemoveSet: (exerciseId: string, tempId: string) => void;
     onRemoveWorkout: (exerciseId: string) => void;
+    onEditSet?: (exerciseId: string, tempId: string, reps: number, weight: number) => void;
+}
+
+function SetRow({
+    set,
+    exerciseId,
+    onRemoveSet,
+    onEditSet,
+}: {
+    set: WorkoutSet;
+    exerciseId: string;
+    onRemoveSet: (exerciseId: string, tempId: string) => void;
+    onEditSet?: (exerciseId: string, tempId: string, reps: number, weight: number) => void;
+}) {
+    const t = useTranslations('home');
+    const [editing, setEditing] = useState(false);
+    const [editReps, setEditReps] = useState(String(set.reps));
+    const [editWeight, setEditWeight] = useState(String(set.weight));
+
+    const handleSave = () => {
+        const repsNum = parseInt(editReps, 10);
+        const weightNum = parseFloat(editWeight);
+        if (isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) return;
+        onEditSet?.(exerciseId, set.tempId, repsNum, weightNum);
+        setEditing(false);
+    };
+
+    if (editing) {
+        return (
+            <div className="flex gap-2 mb-2">
+                <Input
+                    type="number"
+                    value={editReps}
+                    onChange={e => setEditReps(e.target.value)}
+                    min="0"
+                    step="1"
+                    className="flex-1"
+                    placeholder={t('reps')}
+                    size={6}
+                />
+                <Input
+                    type="number"
+                    value={editWeight}
+                    onChange={e => setEditWeight(e.target.value)}
+                    min="0"
+                    step="0.5"
+                    className="flex-1"
+                    placeholder={t('weight')}
+                    size={6}
+                />
+                <Button variant="ghost" size="icon" onClick={handleSave}>
+                    <Check className="h-4 w-4 text-green-600" />
+                </Button>
+            </div>
+        );
+    }
+    return (
+        <div className="flex items-center gap-4 mb-2">
+            <div className="flex-1">{set.reps} {t('reps')}</div>
+            <div className="flex-1">{set.weight} {t('weight')} (kg)</div>
+            <div className="flex gap-1">
+                <Button variant="ghost" size="icon" onClick={() => setEditing(true)}>
+                    <Pencil className="h-4 w-4 text-muted-foreground" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => onRemoveSet(exerciseId, set.tempId)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+            </div>
+        </div>
+    );
 }
 
 export function WorkoutCardComponent({
@@ -29,6 +99,7 @@ export function WorkoutCardComponent({
     onAddSet,
     onRemoveSet,
     onRemoveWorkout,
+    onEditSet,
 }: WorkoutCardProps) {
     const [reps, setReps] = useState('');
     const [weight, setWeight] = useState('');
@@ -39,8 +110,6 @@ export function WorkoutCardComponent({
         const weightNum = parseFloat(weight);
         if (isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) return;
         onAddSet(exerciseId, repsNum, weightNum);
-        setReps('');
-        setWeight('');
     };
 
     return (
@@ -55,13 +124,13 @@ export function WorkoutCardComponent({
                 <div className="mb-2">
                     {sets.length === 0 && <div className="text-muted-foreground text-sm">{t('noSetsInWorkout')}</div>}
                     {sets.map((set) => (
-                        <div key={set.tempId} className="flex items-center gap-4 mb-2">
-                            <div className="flex-1">{set.reps} {t('reps')}</div>
-                            <div className="flex-1">{set.weight} {t('weight')} (kg)</div>
-                            <Button variant="ghost" size="icon" onClick={() => onRemoveSet(exerciseId, set.tempId)}>
-                                <Trash2 className="h-4 w-4 text-red-500" />
-                            </Button>
-                        </div>
+                        <SetRow
+                            key={set.tempId}
+                            set={set}
+                            exerciseId={exerciseId}
+                            onRemoveSet={onRemoveSet}
+                            onEditSet={onEditSet}
+                        />
                     ))}
                 </div>
                 <div className="flex gap-2 mt-2">
