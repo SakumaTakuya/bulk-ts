@@ -5,6 +5,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2, PlusCircle, Pencil, Check } from 'lucide-react';
+import { SwipeableList, SwipeableListItem, Type as SwipeableListType } from 'react-swipeable-list';
+import 'react-swipeable-list/dist/styles.css';
 import { useTranslations } from 'next-intl';
 
 interface WorkoutSet {
@@ -77,18 +79,32 @@ function SetRow({
         );
     }
     return (
-        <div className="flex items-center gap-4 mb-2">
-            <div className="flex-1">{set.reps} {t('reps')}</div>
-            <div className="flex-1">{set.weight} {t('weight')} (kg)</div>
-            <div className="flex gap-1">
+        <SwipeableListItem
+            {...{
+                swipeLeft: {
+                    action: () => onRemoveSet(exerciseId, set.tempId),
+                    content: (
+                        <div className="flex items-center justify-end h-full pr-4 bg-red-100">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => onRemoveSet(exerciseId, set.tempId)}
+                            >
+                                <Trash2 className="h-5 w-5 text-red-500" />
+                            </Button>
+                        </div>
+                    ),
+                },
+            } as any}
+        >
+            <div className="flex items-center gap-4 mb-1 transition-colors w-full">
+                <div className="flex-1">{set.reps} {t('reps')}</div>
+                <div className="flex-1">{set.weight} {t('weight')} (kg)</div>
                 <Button variant="ghost" size="icon" onClick={() => setEditing(true)}>
                     <Pencil className="h-4 w-4 text-muted-foreground" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => onRemoveSet(exerciseId, set.tempId)}>
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                </Button>
             </div>
-        </div>
+        </SwipeableListItem>
     );
 }
 
@@ -123,15 +139,17 @@ export function WorkoutCardComponent({
             <CardContent>
                 <div className="mb-2">
                     {sets.length === 0 && <div className="text-muted-foreground text-sm">{t('noSetsInWorkout')}</div>}
-                    {sets.map((set) => (
-                        <SetRow
-                            key={set.tempId}
-                            set={set}
-                            exerciseId={exerciseId}
-                            onRemoveSet={onRemoveSet}
-                            onEditSet={onEditSet}
-                        />
-                    ))}
+                    <SwipeableList threshold={0.25} type={SwipeableListType.IOS}>
+                        {sets.map((set) => (
+                            <SetRow
+                                key={set.tempId}
+                                set={set}
+                                exerciseId={exerciseId}
+                                onRemoveSet={onRemoveSet}
+                                onEditSet={onEditSet}
+                            />
+                        ))}
+                    </SwipeableList>
                 </div>
                 <div className="flex gap-2 mt-2">
                     <Input
