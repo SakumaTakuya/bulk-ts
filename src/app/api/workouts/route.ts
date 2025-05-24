@@ -19,7 +19,7 @@ const workoutLogSchema = z.object({
 });
 
 // POST /api/workouts - Create a new workout log with sets
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -50,13 +50,16 @@ export async function POST(request: NextRequest) {
       },
     });
     if (!userExercise) {
-      return NextResponse.json({ error: 'Exercise not found or does not belong to the user' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Exercise not found or does not belong to the user' },
+        { status: 400 }
+      );
     }
     // --- End Integrity Check ---
 
-
     // Use a transaction to ensure atomicity: create log and all sets together
-    const newWorkoutLog = await prisma.$transaction(async (tx: Prisma.TransactionClient) => { // Add type to tx
+    const newWorkoutLog = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      // Add type to tx
       // 1. Create the WorkoutLog entry
       const log = await tx.workoutLog.create({
         data: {
@@ -83,24 +86,19 @@ export async function POST(request: NextRequest) {
     // Optionally fetch the full log with sets to return
     const fullLog = await prisma.workoutLog.findUnique({
       where: { id: newWorkoutLog.id },
-      include: { sets: true } // No exercise relation in Set anymore
+      include: { sets: true }, // No exercise relation in Set anymore
     });
 
-
     return NextResponse.json(fullLog, { status: 201 });
-
   } catch (error) {
     console.error('Error creating workout log:', error);
     // Handle specific errors if necessary (e.g., foreign key constraints)
-    return NextResponse.json(
-      { error: 'Failed to create workout log' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create workout log' }, { status: 500 });
   }
 }
 
 // GET /api/workouts - Fetch workout logs for a specific date
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -128,20 +126,19 @@ export async function GET(request: NextRequest) {
     const endOfDay = new Date(targetDate);
     endOfDay.setUTCHours(23, 59, 59, 999);
 
-
     const workoutLogs = await prisma.workoutLog.findMany({
       where: {
         userId: userId,
         date: {
           gte: startOfDay, // Greater than or equal to start of day
-          lte: endOfDay,   // Less than or equal to end of day
+          lte: endOfDay, // Less than or equal to end of day
         },
       },
       include: {
         sets: {
           orderBy: {
             createdAt: 'asc', // Order sets by creation time within the log
-          }
+          },
         },
       },
       orderBy: {
@@ -150,12 +147,8 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(workoutLogs);
-
   } catch (error) {
     console.error('Error fetching workout logs:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch workout logs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch workout logs' }, { status: 500 });
   }
 }

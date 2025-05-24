@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { JWT, DefaultJWT } from "next-auth/jwt";
+import { JWT, DefaultJWT } from 'next-auth/jwt';
 
 // Extend the built-in session types
-declare module "next-auth" {
+declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
@@ -12,7 +12,7 @@ declare module "next-auth" {
     user: {
       /** The user's id. */
       id: string;
-    } & DefaultSession["user"]; // Keep the default properties like name, email, image
+    } & DefaultSession['user']; // Keep the default properties like name, email, image
   }
 
   /** Extends the built-in User model */
@@ -22,7 +22,7 @@ declare module "next-auth" {
 }
 
 // Extend the built-in JWT types
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
     /** OpenID ID Token */
