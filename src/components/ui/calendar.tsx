@@ -1,19 +1,14 @@
-'use client'
+'use client';
 
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronUpIcon,
-} from 'lucide-react'
-import * as React from 'react'
-import { DayFlag, DayPicker, SelectionState, UI } from 'react-day-picker'
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
+import * as React from 'react';
+import { DayFlag, DayPicker, SelectionState, UI } from 'react-day-picker';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import { buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button';
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 export const Calendar = ({
   className,
@@ -40,8 +35,7 @@ export const Calendar = ({
         ),
         [UI.MonthGrid]: 'w-full border-collapse space-y-1',
         [UI.Weekdays]: 'flex',
-        [UI.Weekday]:
-          'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+        [UI.Weekday]: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
         [UI.Week]: 'flex w-full mt-2',
         [UI.Day]:
           'h-9 w-9 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
@@ -66,20 +60,20 @@ export const Calendar = ({
       }}
       {...props}
     />
-  )
-}
+  );
+};
 
 const Chevron = ({ orientation = 'left' }) => {
   switch (orientation) {
     case 'left':
-      return <ChevronLeftIcon className="h-4 w-4" />
+      return <ChevronLeftIcon className="h-4 w-4" />;
     case 'right':
-      return <ChevronRightIcon className="h-4 w-4" />
+      return <ChevronRightIcon className="h-4 w-4" />;
     case 'up':
-      return <ChevronUpIcon className="h-4 w-4" />
+      return <ChevronUpIcon className="h-4 w-4" />;
     case 'down':
-      return <ChevronDownIcon className="h-4 w-4" />
+      return <ChevronDownIcon className="h-4 w-4" />;
     default:
-      return null
+      return null;
   }
-}
+};

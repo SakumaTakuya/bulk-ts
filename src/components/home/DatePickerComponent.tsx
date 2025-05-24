@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { useFormatter } from 'use-intl';
 
@@ -23,10 +23,10 @@ export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerCo
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            variant={"outline"}
+            variant={'outline'}
             className={cn(
-              "w-full justify-start text-left font-normal",
-              !selectedDate && "text-muted-foreground"
+              'w-full justify-start text-left font-normal',
+              !selectedDate && 'text-muted-foreground'
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -38,7 +38,7 @@ export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerCo
             mode="single"
             selected={selectedDate}
             onSelect={onSelectDate}
-          // initialFocus removed
+            // initialFocus removed
           />
         </PopoverContent>
       </Popover>

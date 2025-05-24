@@ -1,11 +1,11 @@
-import type { NextConfig } from "next";
-import withPWAInit from "next-pwa"; // Import next-pwa
+import type { NextConfig } from 'next';
+import withPWAInit from 'next-pwa'; // Import next-pwa
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 const withPWA = withPWAInit({
-  dest: "public", // Destination directory for service worker files
+  dest: 'public', // Destination directory for service worker files
   disable: isDev, // Disable PWA in development
   // register: true, // Register service worker immediately
   // skipWaiting: true, // Force new service worker activation

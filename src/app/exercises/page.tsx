@@ -9,158 +9,160 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 
 // Exercise型の定義
 interface Exercise {
-    id: string;
-    name: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  name: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // エラー型の定義
 interface FetchError extends Error {
-    message: string;
+  message: string;
 }
 
 export default function ExercisesPage() {
-    const { status } = useSession();
-    // フックは条件付きで呼び出せないため、常に呼び出す
-    const t = useTranslations('exercises');
-    const common = useTranslations('common');
+  const { status } = useSession();
+  // フックは条件付きで呼び出せないため、常に呼び出す
+  const t = useTranslations('exercises');
+  const common = useTranslations('common');
 
-    const [exercises, setExercises] = useState<Exercise[]>([]);
-    const [newExerciseName, setNewExerciseName] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [newExerciseName, setNewExerciseName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // セッションが認証されたときにエクササイズを取得
-    useEffect(() => {
-        const fetchExercises = async () => {
-            if (status !== 'authenticated') return;
+  // セッションが認証されたときにエクササイズを取得
+  useEffect(() => {
+    const fetchExercises = async () => {
+      if (status !== 'authenticated') return;
 
-            setIsLoading(true);
-            setError(null);
-            try {
-                const response = await fetch('/api/exercises');
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-                }
-                const data: Exercise[] = await response.json();
-                setExercises(data);
-            } catch (err: unknown) {
-                console.error("Failed to fetch exercises:", err);
-                const fetchError = err as FetchError;
-                setError(fetchError.message || 'Failed to load exercises.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (status === 'authenticated') {
-            fetchExercises();
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/exercises');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
-        // ユーザーがログアウトした場合、状態をリセット
-        if (status === 'unauthenticated') {
-            setExercises([]);
-            setError(null);
-            setNewExerciseName('');
-        }
-    }, [status]);
-
-    const handleCreateExercise = async (e: FormEvent) => {
-        e.preventDefault();
-        if (!newExerciseName.trim()) {
-            return;
-        }
-        setIsSubmitting(true);
-        setError(null);
-
-        try {
-            const response = await fetch('/api/exercises', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: newExerciseName }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-            }
-
-            const createdExercise: Exercise = await response.json();
-            setExercises((prev) => [...prev, createdExercise].sort((a, b) => a.name.localeCompare(b.name)));
-            setNewExerciseName(''); // 入力をクリア
-        } catch (err: unknown) {
-            console.error("Failed to create exercise:", err);
-            const fetchError = err as FetchError;
-            setError(fetchError.message || 'Failed to create exercise.');
-        } finally {
-            setIsSubmitting(false);
-        }
+        const data: Exercise[] = await response.json();
+        setExercises(data);
+      } catch (err: unknown) {
+        console.error('Failed to fetch exercises:', err);
+        const fetchError = err as FetchError;
+        setError(fetchError.message || 'Failed to load exercises.');
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    if (status === 'loading') {
-        return <div>{common("loading")}</div>;
+    if (status === 'authenticated') {
+      fetchExercises();
     }
-
+    // ユーザーがログアウトした場合、状態をリセット
     if (status === 'unauthenticated') {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
-                <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
-            </div>
-        );
+      setExercises([]);
+      setError(null);
+      setNewExerciseName('');
     }
+  }, [status]);
 
-    // 認証済みビュー
+  const handleCreateExercise = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!newExerciseName.trim()) {
+      return;
+    }
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/exercises', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newExerciseName }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const createdExercise: Exercise = await response.json();
+      setExercises((prev) =>
+        [...prev, createdExercise].sort((a, b) => a.name.localeCompare(b.name))
+      );
+      setNewExerciseName(''); // 入力をクリア
+    } catch (err: unknown) {
+      console.error('Failed to create exercise:', err);
+      const fetchError = err as FetchError;
+      setError(fetchError.message || 'Failed to create exercise.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (status === 'loading') {
+    return <div>{common('loading')}</div>;
+  }
+
+  if (status === 'unauthenticated') {
     return (
-        <div className="container mx-auto p-4">
-            <Card className="mb-6">
-                <CardHeader>
-                    <CardTitle>{t('addExercise')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleCreateExercise} className="flex gap-2">
-                        <Input
-                            type="text"
-                            placeholder={t('name')}
-                            value={newExerciseName}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewExerciseName(e.target.value)}
-                            disabled={isSubmitting}
-                            required
-                        />
-                        <Button type="submit" disabled={isSubmitting || !newExerciseName.trim()}>
-                            {isSubmitting ? `${t('adding')}...` : t('addExercise')}
-                        </Button>
-                    </form>
-                </CardContent>
-                {error && <CardFooter className="text-red-500">{error}</CardFooter>}
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('yourExercises')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {isLoading && <div>{common('loading')}...</div>}
-                    {!isLoading && exercises.length === 0 && !error && (
-                        <div>{t('noExercises')}</div>
-                    )}
-                    {!isLoading && exercises.length > 0 && (
-                        <ul>
-                            {exercises.map((exercise) => (
-                                <li key={exercise.id} className="border-b py-2">
-                                    {exercise.name}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                    {!isLoading && error && <div className="text-red-500 mt-4">{error}</div>}
-                </CardContent>
-            </Card>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
+        <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
+      </div>
     );
+  }
+
+  // 認証済みビュー
+  return (
+    <div className="container mx-auto p-4">
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('addExercise')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleCreateExercise} className="flex gap-2">
+            <Input
+              type="text"
+              placeholder={t('name')}
+              value={newExerciseName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setNewExerciseName(e.target.value)
+              }
+              disabled={isSubmitting}
+              required
+            />
+            <Button type="submit" disabled={isSubmitting || !newExerciseName.trim()}>
+              {isSubmitting ? `${t('adding')}...` : t('addExercise')}
+            </Button>
+          </form>
+        </CardContent>
+        {error && <CardFooter className="text-red-500">{error}</CardFooter>}
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('yourExercises')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading && <div>{common('loading')}...</div>}
+          {!isLoading && exercises.length === 0 && !error && <div>{t('noExercises')}</div>}
+          {!isLoading && exercises.length > 0 && (
+            <ul>
+              {exercises.map((exercise) => (
+                <li key={exercise.id} className="border-b py-2">
+                  {exercise.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          {!isLoading && error && <div className="text-red-500 mt-4">{error}</div>}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

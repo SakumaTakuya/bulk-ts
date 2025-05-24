@@ -10,7 +10,8 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   // Ensure user is authenticated and we have the user ID
-  if (!session?.user?.id) { // Check for user.id specifically
+  if (!session?.user?.id) {
+    // Check for user.id specifically
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const userId = session.user.id;
@@ -29,10 +30,7 @@ export async function GET() {
     return NextResponse.json(exercises.length ? exercises : []);
   } catch (error) {
     console.error('Error fetching exercises:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch exercises' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch exercises' }, { status: 500 });
   }
 }
 
@@ -51,10 +49,7 @@ export async function POST(request: NextRequest) {
     const { name } = body;
 
     if (!name || typeof name !== 'string' || name.trim() === '') {
-      return NextResponse.json(
-        { error: 'Exercise name is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Exercise name is required' }, { status: 400 });
     }
 
     const trimmedName = name.trim();
@@ -73,19 +68,18 @@ export async function POST(request: NextRequest) {
     // エラータイプチェック
     if (error instanceof PrismaClientKnownRequestError) {
       // Handle potential unique constraint violation (userId, name)
-      if (error.code === 'P2002' &&
+      if (
+        error.code === 'P2002' &&
         Array.isArray(error.meta?.target) &&
         error.meta.target.includes('userId') &&
-        error.meta.target.includes('name')) {
+        error.meta.target.includes('name')
+      ) {
         return NextResponse.json(
           { error: 'You already have an exercise with this name' },
           { status: 409 } // Conflict
         );
       }
     }
-    return NextResponse.json(
-      { error: 'Failed to create exercise' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create exercise' }, { status: 500 });
   }
 }

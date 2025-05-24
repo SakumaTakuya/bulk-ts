@@ -1,70 +1,70 @@
 {
-    "navigation": {
-        "home": "Home",
-        "exercises": "Exercises",
-        "history": "History"
-    },
-    "home": {
-        "title": "Workout Tracker",
-        "addSet": "Add Set",
-        "exercise": "Exercise",
-        "weight": "Weight",
-        "reps": "Reps",
-        "date": "Date",
-        "add": "Add",
-        "currentSets": "Current Sets",
-        "currentSetsTitle": "Current Sets ({date})",
-        "noDate": "No date",
-        "actions": "Actions",
-        "noSets": "No sets added yet",
-        "adding": "Adding...",
-        "invalidSetInput": "Please select an exercise and enter valid reps/weight (non-negative numbers).",
-        "setAdded": "Set added: {name} {reps} reps @ {weight}kg",
-        "setRemoved": "Set removed.",
-        "pleaseSelectDate": "Please select a date for the workout.",
-        "pleaseAddSet": "Please add at least one set to save the workout.",
-        "workoutSaved": "Workout for {date} saved successfully!",
-        "failedToSaveWorkout": "Failed to save workout.",
-        "loadingExercises": "Loading exercises...",
-        "noExercisesFound": "No exercises found.",
-        "manageExercises": "Manage exercises",
-        "selectExercise": "Select exercise",
-        "exerciseName": "Exercise Name",
-        "addWorkout": "Add Workout",
-        "workoutAdded": "Workout \"{name}\" added.",
-        "alreadyAddedWorkout": "This workout has already been added.",
-        "addRow": "Add Row",
-        "noSetsInWorkout": "No sets",
-        "edit": "Edit",
-        "save": "Save",
-        "cancel": "Cancel"
-    },
-    "exercises": {
-        "title": "Exercises",
-        "addExercise": "Add Exercise",
-        "name": "Name",
-        "category": "Category",
-        "noExercises": "No exercises found",
-        "yourExercises": "Your Exercises"
-    },
-    "history": {
-        "title": "Workout History",
-        "noWorkouts": "No workouts found",
-        "failedToLoad": "Failed to load workouts",
-        "selectDate": "Select Date"
-    },
-    "common": {
-        "save": "Save",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "edit": "Edit",
-        "signIn": "Sign In",
-        "signOut": "Sign Out",
-        "loading": "Loading...",
-        "pickADate": "Pick a date"
-    },
-    "notFound": {
-        "title": "404 - Page Not Found",
-        "message": "Sorry, the page you are looking for could not be found."
-    }
+  "navigation": {
+    "home": "Home",
+    "exercises": "Exercises",
+    "history": "History"
+  },
+  "home": {
+    "title": "Workout Tracker",
+    "addSet": "Add Set",
+    "exercise": "Exercise",
+    "weight": "Weight",
+    "reps": "Reps",
+    "date": "Date",
+    "add": "Add",
+    "currentSets": "Current Sets",
+    "currentSetsTitle": "Current Sets ({date})",
+    "noDate": "No date",
+    "actions": "Actions",
+    "noSets": "No sets added yet",
+    "adding": "Adding...",
+    "invalidSetInput": "Please select an exercise and enter valid reps/weight (non-negative numbers).",
+    "setAdded": "Set added: {name} {reps} reps @ {weight}kg",
+    "setRemoved": "Set removed.",
+    "pleaseSelectDate": "Please select a date for the workout.",
+    "pleaseAddSet": "Please add at least one set to save the workout.",
+    "workoutSaved": "Workout for {date} saved successfully!",
+    "failedToSaveWorkout": "Failed to save workout.",
+    "loadingExercises": "Loading exercises...",
+    "noExercisesFound": "No exercises found.",
+    "manageExercises": "Manage exercises",
+    "selectExercise": "Select exercise",
+    "exerciseName": "Exercise Name",
+    "addWorkout": "Add Workout",
+    "workoutAdded": "Workout \"{name}\" added.",
+    "alreadyAddedWorkout": "This workout has already been added.",
+    "addRow": "Add Row",
+    "noSetsInWorkout": "No sets",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "addExercise": "Add Exercise",
+    "name": "Name",
+    "category": "Category",
+    "noExercises": "No exercises found",
+    "yourExercises": "Your Exercises"
+  },
+  "history": {
+    "title": "Workout History",
+    "noWorkouts": "No workouts found",
+    "failedToLoad": "Failed to load workouts",
+    "selectDate": "Select Date"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "loading": "Loading...",
+    "pickADate": "Pick a date"
+  },
+  "notFound": {
+    "title": "404 - Page Not Found",
+    "message": "Sorry, the page you are looking for could not be found."
+  }
 }
