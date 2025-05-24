@@ -19,7 +19,7 @@ const workoutLogSchema = z.object({
 });
 
 // POST /api/workouts - Create a new workout log with sets
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET /api/workouts - Fetch workout logs for a specific date
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {

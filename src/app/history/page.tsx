@@ -40,7 +40,7 @@ interface FetchError extends Error {
   message: string;
 }
 
-export default function HistoryPage() {
+export default function HistoryPage(): React.JSX.Element {
   const { status } = useSession();
   const format = useFormatter();
   const t = useTranslations('history');
@@ -54,7 +54,7 @@ export default function HistoryPage() {
 
   // fetchWorkoutLogs関数をuseEffect内に移動し、依存関係を簡素化
   useEffect(() => {
-    const fetchWorkoutLogs = async () => {
+    const fetchWorkoutLogs = async (): Promise<void> => {
       if (!selectedDate || status !== 'authenticated') {
         setWorkoutLogs([]);
         return;

@@ -35,7 +35,7 @@ interface FetchError extends Error {
   message: string;
 }
 
-export default function HomePage() {
+export default function HomePage(): React.JSX.Element {
   const { status } = useSession();
   const t = useTranslations('home');
   const common = useTranslations('common');
@@ -60,7 +60,7 @@ export default function HomePage() {
   );
 
   useEffect(() => {
-    const fetchExercises = async () => {
+    const fetchExercises = async (): Promise<void> => {
       if (status !== 'authenticated') return;
 
       setIsLoadingExercises(true);
@@ -89,7 +89,7 @@ export default function HomePage() {
   }, [status]);
 
   // ワークアウト追加
-  const handleAddWorkout = async () => {
+  const handleAddWorkout = async (): Promise<void> => {
     const trimmedInput = exerciseInput.trim();
     if (!trimmedInput) {
       toast.error(t('invalidSetInput'));
@@ -146,28 +146,28 @@ export default function HomePage() {
   };
 
   // 各ワークアウト内でセット追加
-  const handleAddSet = (exerciseId: string, reps: number, weight: number) => {
+  const handleAddSet = (exerciseId: string, reps: number, weight: number): void => {
     setWorkouts((prev) =>
       prev.map((w) =>
         w.exerciseId === exerciseId
           ? {
-              ...w,
-              sets: [
-                ...w.sets,
-                {
-                  tempId: crypto.randomUUID(),
-                  reps,
-                  weight,
-                },
-              ],
-            }
+            ...w,
+            sets: [
+              ...w.sets,
+              {
+                tempId: crypto.randomUUID(),
+                reps,
+                weight,
+              },
+            ],
+          }
           : w
       )
     );
   };
 
   // 各ワークアウト内でセット削除
-  const handleRemoveSet = (exerciseId: string, tempId: string) => {
+  const handleRemoveSet = (exerciseId: string, tempId: string): void => {
     setWorkouts((prev) =>
       prev.map((w) =>
         w.exerciseId === exerciseId
@@ -178,12 +178,12 @@ export default function HomePage() {
   };
 
   // ワークアウト削除
-  const handleRemoveWorkout = (exerciseId: string) => {
+  const handleRemoveWorkout = (exerciseId: string): void => {
     setWorkouts((prev) => prev.filter((w) => w.exerciseId !== exerciseId));
   };
 
   // 保存
-  const handleSaveWorkout = async () => {
+  const handleSaveWorkout = async (): Promise<void> => {
     if (!selectedDate) {
       toast.error(t('pleaseSelectDate'));
       return;
@@ -275,11 +275,11 @@ export default function HomePage() {
                 prev.map((wo) =>
                   wo.exerciseId === exerciseId
                     ? {
-                        ...wo,
-                        sets: wo.sets.map((set) =>
-                          set.tempId === tempId ? { ...set, reps, weight } : set
-                        ),
-                      }
+                      ...wo,
+                      sets: wo.sets.map((set) =>
+                        set.tempId === tempId ? { ...set, reps, weight } : set
+                      ),
+                    }
                     : wo
                 )
               );

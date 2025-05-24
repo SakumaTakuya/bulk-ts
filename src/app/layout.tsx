@@ -33,7 +33,7 @@ export const viewport: Viewport = {
   themeColor: 'black',
 };
 
-export default async function LocaleLayout({ children }: { children: React.ReactNode }) {
+export default async function LocaleLayout({ children }: { children: React.ReactNode }): Promise<React.JSX.Element> {
   const locale = await getLocale();
 
   return (

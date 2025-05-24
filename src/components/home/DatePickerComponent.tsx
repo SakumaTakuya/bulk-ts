@@ -14,7 +14,7 @@ interface DatePickerComponentProps {
   onSelectDate: (date: Date | undefined) => void;
 }
 
-export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerComponentProps) {
+export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerComponentProps): React.JSX.Element {
   const t = useTranslations('home');
   const format = useFormatter();
 
@@ -38,7 +38,7 @@ export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerCo
             mode="single"
             selected={selectedDate}
             onSelect={onSelectDate}
-            // initialFocus removed
+          // initialFocus removed
           />
         </PopoverContent>
       </Popover>

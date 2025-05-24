@@ -35,13 +35,13 @@ function SetRow({
   exerciseId: string;
   onRemoveSet: (exerciseId: string, tempId: string) => void;
   onEditSet?: (exerciseId: string, tempId: string, reps: number, weight: number) => void;
-}) {
+}): React.JSX.Element {
   const t = useTranslations('home');
   const [editing, setEditing] = useState(false);
   const [editReps, setEditReps] = useState(String(set.reps));
   const [editWeight, setEditWeight] = useState(String(set.weight));
 
-  const handleSave = () => {
+  const handleSave = (): void => {
     const repsNum = parseInt(editReps, 10);
     const weightNum = parseFloat(editWeight);
     if (isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) return;
@@ -120,12 +120,12 @@ export function WorkoutCardComponent({
   onRemoveSet,
   onRemoveWorkout,
   onEditSet,
-}: WorkoutCardProps) {
+}: WorkoutCardProps): React.JSX.Element {
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
   const t = useTranslations('home');
 
-  const handleAddSet = () => {
+  const handleAddSet = (): void => {
     const repsNum = parseInt(reps, 10);
     const weightNum = parseFloat(weight);
     if (isNaN(repsNum) || repsNum < 0 || isNaN(weightNum) || weightNum < 0) return;

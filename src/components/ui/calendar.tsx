@@ -15,7 +15,7 @@ export const Calendar = ({
   classNames,
   showOutsideDays = true,
   ...props
-}: CalendarProps) => {
+}: CalendarProps): React.JSX.Element => {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -63,7 +63,7 @@ export const Calendar = ({
   );
 };
 
-const Chevron = ({ orientation = 'left' }) => {
+const Chevron = ({ orientation = 'left' }): React.JSX.Element | null => {
   switch (orientation) {
     case 'left':
       return <ChevronLeftIcon className="h-4 w-4" />;

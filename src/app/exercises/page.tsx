@@ -21,7 +21,7 @@ interface FetchError extends Error {
   message: string;
 }
 
-export default function ExercisesPage() {
+export default function ExercisesPage(): React.JSX.Element {
   const { status } = useSession();
   // フックは条件付きで呼び出せないため、常に呼び出す
   const t = useTranslations('exercises');
@@ -35,7 +35,7 @@ export default function ExercisesPage() {
 
   // セッションが認証されたときにエクササイズを取得
   useEffect(() => {
-    const fetchExercises = async () => {
+    const fetchExercises = async (): Promise<void> => {
       if (status !== 'authenticated') return;
 
       setIsLoading(true);
@@ -68,7 +68,7 @@ export default function ExercisesPage() {
     }
   }, [status]);
 
-  const handleCreateExercise = async (e: FormEvent) => {
+  const handleCreateExercise = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     if (!newExerciseName.trim()) {
       return;

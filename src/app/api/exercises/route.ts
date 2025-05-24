@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 // GET /api/exercises - Fetch exercises for the logged-in user
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   // Ensure user is authenticated and we have the user ID
@@ -35,7 +35,7 @@ export async function GET() {
 }
 
 // POST /api/exercises - Create a new exercise for the logged-in user
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   // Ensure user is authenticated and we have the user ID

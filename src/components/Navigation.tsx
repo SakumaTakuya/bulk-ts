@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-export default function Navigation() {
+export default function Navigation(): React.JSX.Element {
   const pathname = usePathname();
   const t = useTranslations('navigation');
   const common = useTranslations('common');
