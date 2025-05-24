@@ -96,7 +96,6 @@ const eslintConfig = [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 
       // Imports
-      'import/no-default-export': 'error',
       'import/prefer-default-export': 'off',
 
       // React specific rules (many are covered by next/core-web-vitals)
