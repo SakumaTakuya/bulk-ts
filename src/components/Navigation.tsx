@@ -17,9 +17,9 @@ export default function Navigation(): React.JSX.Element {
 
   // 多言語化したナビゲーションリンク
   const navLinks = [
-    { name: t('home'), icon: <Home size={20} />, href: '/' },
-    { name: t('exercises'), icon: <Dumbbell size={20} />, href: '/exercises' },
-    { name: t('history'), icon: <History size={20} />, href: '/history' },
+    { name: t('navigation.home'), icon: <Home size={20} />, href: '/' },
+    { name: t('navigation.exercises'), icon: <Dumbbell size={20} />, href: '/exercises' },
+    { name: t('navigation.history'), icon: <History size={20} />, href: '/history' },
   ];
 
   // 現在のパスを確認する関数

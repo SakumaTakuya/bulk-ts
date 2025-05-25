@@ -75,7 +75,7 @@ export default function HistoryPage(): React.JSX.Element {
       } catch (err: unknown) {
         console.error('Failed to fetch workout logs:', err);
         const fetchError = err as FetchError;
-        setError(fetchError.message || t('failedToLoad'));
+        setError(fetchError.message || t('history.failedToLoad'));
       } finally {
         setIsLoading(false);
       }
@@ -93,7 +93,7 @@ export default function HistoryPage(): React.JSX.Element {
   if (status === 'unauthenticated') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('history.title')}</h1>
         <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
       </div>
     );
@@ -118,25 +118,25 @@ export default function HistoryPage(): React.JSX.Element {
         {/* ワークアウトログの表示 */}
         <div className="flex-1">
           <h2 className="text-2xl font-semibold mb-4">
-            {selectedDate ? format.dateTime(selectedDate) : t('selectDate')}
+            {selectedDate ? format.dateTime(selectedDate) : t('history.selectDate')}
           </h2>
           {isLoading && <div>{common('loading')}</div>}
           {error && <div className="text-red-500">{error}</div>}
-          {!isLoading && !error && workoutLogs.length === 0 && <div>{t('noWorkouts')}</div>}
+          {!isLoading && !error && workoutLogs.length === 0 && <div>{t('history.noWorkouts')}</div>}
           {!isLoading && !error && workoutLogs.length > 0 && (
             <div className="space-y-4">
               {workoutLogs.map((log) => (
                 <Card key={log.id}>
                   <CardHeader>
-                    <CardTitle>{t('title')}</CardTitle>
+                    <CardTitle>{t('history.title')}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>{home('exercise')}</TableHead>
-                          <TableHead className="text-right">{home('reps')}</TableHead>
-                          <TableHead className="text-right">{home('weight')} (kg)</TableHead>
+                          <TableHead>{home('home.exercise')}</TableHead>
+                          <TableHead className="text-right">{home('home.reps')}</TableHead>
+                          <TableHead className="text-right">{home('home.weight')} (kg)</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>

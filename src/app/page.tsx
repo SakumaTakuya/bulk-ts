@@ -92,7 +92,7 @@ export default function HomePage(): React.JSX.Element {
   const handleAddWorkout = async (): Promise<void> => {
     const trimmedInput = exerciseInput.trim();
     if (!trimmedInput) {
-      toast.error(t('invalidSetInput'));
+      toast.error(t('home.invalidSetInput'));
       return;
     }
     // 既存エクササイズ検索（大文字小文字区別なし完全一致）
@@ -128,7 +128,7 @@ export default function HomePage(): React.JSX.Element {
 
     // 既に同じエクササイズのワークアウトが存在する場合は追加しない
     if (workouts.some((w) => w.exerciseId === exerciseId)) {
-      toast.info(t('alreadyAddedWorkout'));
+      toast.info(t('home.alreadyAddedWorkout'));
       setExerciseInput('');
       return;
     }
@@ -142,7 +142,7 @@ export default function HomePage(): React.JSX.Element {
       },
     ]);
     setExerciseInput('');
-    toast.success(t('workoutAdded', { name: exerciseName }));
+    toast.success(t('home.workoutAdded', { name: exerciseName }));
   };
 
   // 各ワークアウト内でセット追加
@@ -185,7 +185,7 @@ export default function HomePage(): React.JSX.Element {
   // 保存
   const handleSaveWorkout = async (): Promise<void> => {
     if (!selectedDate) {
-      toast.error(t('pleaseSelectDate'));
+      toast.error(t('home.pleaseSelectDate'));
       return;
     }
     const allSets = workouts.flatMap((w) =>
@@ -196,7 +196,7 @@ export default function HomePage(): React.JSX.Element {
       }))
     );
     if (allSets.length === 0) {
-      toast.error(t('pleaseAddSet'));
+      toast.error(t('home.pleaseAddSet'));
       return;
     }
 
@@ -220,13 +220,13 @@ export default function HomePage(): React.JSX.Element {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      toast.success(t('workoutSaved', { date: format.dateTime(selectedDate) }));
+      toast.success(t('home.workoutSaved', { date: format.dateTime(selectedDate) }));
       setWorkouts([]);
     } catch (err: unknown) {
       console.error('Failed to save workout:', err);
       const fetchError = err as FetchError;
-      setFetchError(fetchError.message || t('failedToSaveWorkout'));
-      toast.error(fetchError.message || t('failedToSaveWorkout'));
+      setFetchError(fetchError.message || t('home.failedToSaveWorkout'));
+      toast.error(fetchError.message || t('home.failedToSaveWorkout'));
     } finally {
       setIsSavingWorkout(false);
     }
@@ -239,7 +239,7 @@ export default function HomePage(): React.JSX.Element {
   if (status === 'unauthenticated') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">{t('title')}</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('home.title')}</h1>
         <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
       </div>
     );
@@ -294,7 +294,7 @@ export default function HomePage(): React.JSX.Element {
             <div className="relative">
               <Input
                 type="text"
-                placeholder={t('exerciseName')}
+                placeholder={t('home.exerciseName')}
                 value={exerciseInput}
                 onChange={(e) => setExerciseInput(e.target.value)}
                 onFocus={() => setIsFocused(true)}
@@ -326,12 +326,12 @@ export default function HomePage(): React.JSX.Element {
               disabled={isLoadingExercises || !exerciseInput.trim()}
               className="w-full mt-2"
             >
-              <PlusCircle className="mr-2 h-4 w-4" /> {t('addWorkout')}
+              <PlusCircle className="mr-2 h-4 w-4" /> {t('home.addWorkout')}
             </Button>
-            {isLoadingExercises && <div className="mt-2">{t('loadingExercises')}</div>}
+            {isLoadingExercises && <div className="mt-2">{t('home.loadingExercises')}</div>}
             {fetchError && <div className="mt-2 text-red-500">{fetchError}</div>}
             {!isLoadingExercises && exercises.length === 0 && !fetchError && (
-              <div className="mt-2">{t('noExercisesFound')}</div>
+              <div className="mt-2">{t('home.noExercisesFound')}</div>
             )}
           </div>
         </div>
