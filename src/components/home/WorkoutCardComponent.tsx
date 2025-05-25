@@ -36,7 +36,7 @@ function SetRow({
   onRemoveSet: (exerciseId: string, tempId: string) => void;
   onEditSet?: (exerciseId: string, tempId: string, reps: number, weight: number) => void;
 }): React.JSX.Element {
-  const t = useTranslations('home');
+  const t = useTranslations();
   const [editing, setEditing] = useState(false);
   const [editReps, setEditReps] = useState(String(set.reps));
   const [editWeight, setEditWeight] = useState(String(set.weight));
@@ -123,7 +123,7 @@ export function WorkoutCardComponent({
 }: WorkoutCardProps): React.JSX.Element {
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
-  const t = useTranslations('home');
+  const t = useTranslations();
 
   const handleAddSet = (): void => {
     const repsNum = parseInt(reps, 10);

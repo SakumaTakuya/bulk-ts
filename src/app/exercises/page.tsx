@@ -24,8 +24,7 @@ interface FetchError extends Error {
 export default function ExercisesPage(): React.JSX.Element {
   const { status } = useSession();
   // フックは条件付きで呼び出せないため、常に呼び出す
-  const t = useTranslations('exercises');
-  const common = useTranslations('common');
+  const t = useTranslations();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [newExerciseName, setNewExerciseName] = useState('');
@@ -105,14 +104,14 @@ export default function ExercisesPage(): React.JSX.Element {
   };
 
   if (status === 'loading') {
-    return <div>{common('loading')}</div>;
+    return <div>{t('loading')}</div>;
   }
 
   if (status === 'unauthenticated') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-3xl font-bold mb-6">{t('exercises.title')}</h1>
-        <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
+        <Button onClick={() => signIn('google')}>{t('signIn')}</Button>
       </div>
     );
   }
@@ -149,7 +148,7 @@ export default function ExercisesPage(): React.JSX.Element {
           <CardTitle>{t('exercises.yourExercises')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && <div>{common('loading')}...</div>}
+          {isLoading && <div>{t('loading')}...</div>}
           {!isLoading && exercises.length === 0 && !error && <div>{t('exercises.noExercises')}</div>}
           {!isLoading && exercises.length > 0 && (
             <ul>

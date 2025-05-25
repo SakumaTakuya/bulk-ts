@@ -43,9 +43,7 @@ interface FetchError extends Error {
 export default function HistoryPage(): React.JSX.Element {
   const { status } = useSession();
   const format = useFormatter();
-  const t = useTranslations('history');
-  const home = useTranslations('home');
-  const common = useTranslations('common');
+  const t = useTranslations();
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [workoutLogs, setWorkoutLogs] = useState<WorkoutLogWithSets[]>([]);
@@ -87,14 +85,14 @@ export default function HistoryPage(): React.JSX.Element {
   }, [selectedDate, status, t]);
 
   if (status === 'loading') {
-    return <div className="flex items-center justify-center min-h-screen">{common('loading')}</div>;
+    return <div className="flex items-center justify-center min-h-screen">{t('loading')}</div>;
   }
 
   if (status === 'unauthenticated') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-3xl font-bold mb-6">{t('history.title')}</h1>
-        <Button onClick={() => signIn('google')}>{common('signIn')}</Button>
+        <Button onClick={() => signIn('google')}>{t('signIn')}</Button>
       </div>
     );
   }
@@ -120,7 +118,7 @@ export default function HistoryPage(): React.JSX.Element {
           <h2 className="text-2xl font-semibold mb-4">
             {selectedDate ? format.dateTime(selectedDate) : t('history.selectDate')}
           </h2>
-          {isLoading && <div>{common('loading')}</div>}
+          {isLoading && <div>{t('loading')}</div>}
           {error && <div className="text-red-500">{error}</div>}
           {!isLoading && !error && workoutLogs.length === 0 && <div>{t('history.noWorkouts')}</div>}
           {!isLoading && !error && workoutLogs.length > 0 && (
@@ -134,9 +132,9 @@ export default function HistoryPage(): React.JSX.Element {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>{home('home.exercise')}</TableHead>
-                          <TableHead className="text-right">{home('home.reps')}</TableHead>
-                          <TableHead className="text-right">{home('home.weight')} (kg)</TableHead>
+                          <TableHead>{t('home.exercise')}</TableHead>
+                          <TableHead className="text-right">{t('home.reps')}</TableHead>
+                          <TableHead className="text-right">{t('home.weight')} (kg)</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
