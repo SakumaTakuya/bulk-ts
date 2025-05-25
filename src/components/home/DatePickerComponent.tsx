@@ -15,7 +15,7 @@ interface DatePickerComponentProps {
 }
 
 export function DatePickerComponent({ selectedDate, onSelectDate }: DatePickerComponentProps): React.JSX.Element {
-  const t = useTranslations('home');
+  const t = useTranslations();
   const format = useFormatter();
 
   return (

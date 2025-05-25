@@ -36,7 +36,7 @@ function SetRow({
   onRemoveSet: (exerciseId: string, tempId: string) => void;
   onEditSet?: (exerciseId: string, tempId: string, reps: number, weight: number) => void;
 }): React.JSX.Element {
-  const t = useTranslations('home');
+  const t = useTranslations();
   const [editing, setEditing] = useState(false);
   const [editReps, setEditReps] = useState(String(set.reps));
   const [editWeight, setEditWeight] = useState(String(set.weight));
@@ -59,7 +59,7 @@ function SetRow({
           min="0"
           step="1"
           className="flex-1"
-          placeholder={t('reps')}
+          placeholder={t('homeReps')}
           size={6}
         />
         <Input
@@ -69,7 +69,7 @@ function SetRow({
           min="0"
           step="0.5"
           className="flex-1"
-          placeholder={t('weight')}
+          placeholder={t('homeWeight')}
           size={6}
         />
         <Button variant="ghost" size="icon" onClick={handleSave}>
@@ -99,10 +99,10 @@ function SetRow({
     >
       <div className="flex items-center gap-4 mb-1 transition-colors w-full">
         <div className="flex-1">
-          {set.reps} {t('reps')}
+          {set.reps} {t('homeReps')}
         </div>
         <div className="flex-1">
-          {set.weight} {t('weight')} (kg)
+          {set.weight} {t('homeWeight')} (kg)
         </div>
         <Button variant="ghost" size="icon" onClick={() => setEditing(true)}>
           <Pencil className="h-4 w-4 text-muted-foreground" />
@@ -123,7 +123,7 @@ export function WorkoutCardComponent({
 }: WorkoutCardProps): React.JSX.Element {
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
-  const t = useTranslations('home');
+  const t = useTranslations();
 
   const handleAddSet = (): void => {
     const repsNum = parseInt(reps, 10);
@@ -143,7 +143,7 @@ export function WorkoutCardComponent({
       <CardContent>
         <div className="mb-2">
           {sets.length === 0 && (
-            <div className="text-muted-foreground text-sm">{t('noSetsInWorkout')}</div>
+            <div className="text-muted-foreground text-sm">{t('homeNoSetsInWorkout')}</div>
           )}
           <SwipeableList threshold={0.25} type={SwipeableListType.IOS}>
             {sets.map((set) => (
@@ -160,7 +160,7 @@ export function WorkoutCardComponent({
         <div className="flex gap-2 mt-2">
           <Input
             type="number"
-            placeholder={t('reps')}
+            placeholder={t('homeReps')}
             value={reps}
             onChange={(e) => setReps(e.target.value)}
             min="0"
@@ -169,7 +169,7 @@ export function WorkoutCardComponent({
           />
           <Input
             type="number"
-            placeholder={t('weight')}
+            placeholder={t('homeWeight')}
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             min="0"
@@ -183,7 +183,7 @@ export function WorkoutCardComponent({
           size="sm"
           className="mt-1 w-full"
         >
-          <PlusCircle className="mr-1 h-4 w-4" /> {t('addRow')}
+          <PlusCircle className="mr-1 h-4 w-4" /> {t('homeAddRow')}
         </Button>
       </CardContent>
     </Card>

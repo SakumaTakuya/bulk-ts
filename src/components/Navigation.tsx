@@ -12,14 +12,13 @@ import Link from 'next/link';
 
 export default function Navigation(): React.JSX.Element {
   const pathname = usePathname();
-  const t = useTranslations('navigation');
-  const common = useTranslations('common');
+  const t = useTranslations();
 
   // 多言語化したナビゲーションリンク
   const navLinks = [
-    { name: t('home'), icon: <Home size={20} />, href: '/' },
-    { name: t('exercises'), icon: <Dumbbell size={20} />, href: '/exercises' },
-    { name: t('history'), icon: <History size={20} />, href: '/history' },
+    { name: t('navigationHome'), icon: <Home size={20} />, href: '/' },
+    { name: t('navigationExercises'), icon: <Dumbbell size={20} />, href: '/exercises' },
+    { name: t('navigationHistory'), icon: <History size={20} />, href: '/history' },
   ];
 
   // 現在のパスを確認する関数
@@ -48,7 +47,7 @@ export default function Navigation(): React.JSX.Element {
         </div>
         <div className="flex items-center gap-4">
           <Button variant="outline" onClick={() => signOut()}>
-            {common('signOut')}
+            {t('signOut')}
           </Button>
         </div>
       </nav>
@@ -83,7 +82,7 @@ export default function Navigation(): React.JSX.Element {
             <div className="flex flex-col h-full p-4 gap-2">
               <h2 className="text-lg font-semibold">メニュー</h2>
               <Button variant="outline" onClick={() => signOut()}>
-                {common('signOut')}
+                {t('signOut')}
               </Button>
             </div>
           </SheetContent>
