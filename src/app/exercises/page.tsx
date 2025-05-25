@@ -110,7 +110,7 @@ export default function ExercisesPage(): React.JSX.Element {
   if (status === 'unauthenticated') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">{t('exercises.title')}</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('exercisesTitle')}</h1>
         <Button onClick={() => signIn('google')}>{t('signIn')}</Button>
       </div>
     );
@@ -121,13 +121,13 @@ export default function ExercisesPage(): React.JSX.Element {
     <div className="container mx-auto p-4">
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('exercises.addExercise')}</CardTitle>
+          <CardTitle>{t('exercisesAddExercise')}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCreateExercise} className="flex gap-2">
             <Input
               type="text"
-              placeholder={t('exercises.name')}
+              placeholder={t('exercisesName')}
               value={newExerciseName}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setNewExerciseName(e.target.value)
@@ -136,7 +136,7 @@ export default function ExercisesPage(): React.JSX.Element {
               required
             />
             <Button type="submit" disabled={isSubmitting || !newExerciseName.trim()}>
-              {isSubmitting ? `${t('adding')}...` : t('exercises.addExercise')}
+              {isSubmitting ? `${t('homeAdding')}` : t('exercisesAddExercise')}
             </Button>
           </form>
         </CardContent>
@@ -145,11 +145,11 @@ export default function ExercisesPage(): React.JSX.Element {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('exercises.yourExercises')}</CardTitle>
+          <CardTitle>{t('exercisesYourExercises')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && <div>{t('loading')}...</div>}
-          {!isLoading && exercises.length === 0 && !error && <div>{t('exercises.noExercises')}</div>}
+          {isLoading && <div>{t('loading')}</div>}
+          {!isLoading && exercises.length === 0 && !error && <div>{t('exercisesNoExercises')}</div>}
           {!isLoading && exercises.length > 0 && (
             <ul>
               {exercises.map((exercise) => (

@@ -91,7 +91,7 @@ export default function HomePage(): React.JSX.Element {
     const handleAddWorkout = async (): Promise<void> => {
         const trimmedInput = exerciseInput.trim();
         if (!trimmedInput) {
-            toast.error(t('home.invalidSetInput'));
+            toast.error(t('homeInvalidSetInput'));
             return;
         }
         // 既存エクササイズ検索（大文字小文字区別なし完全一致）
@@ -117,9 +117,9 @@ export default function HomePage(): React.JSX.Element {
                 setExercises((prev) => [...prev, newExercise]);
             } catch (err: unknown) {
                 if (err && typeof err === 'object' && 'message' in err) {
-                    toast.error((err as { message?: string }).message || t('failedToAddExercise'));
+                    toast.error((err as { message?: string }).message || t('homeFailedToAddExercise'));
                 } else {
-                    toast.error(t('failedToAddExercise'));
+                    toast.error(t('homeFailedToAddExercise'));
                 }
                 return;
             }
@@ -127,7 +127,7 @@ export default function HomePage(): React.JSX.Element {
 
         // 既に同じエクササイズのワークアウトが存在する場合は追加しない
         if (workouts.some((w) => w.exerciseId === exerciseId)) {
-            toast.info(t('home.alreadyAddedWorkout'));
+            toast.info(t('homeAlreadyAddedWorkout'));
             setExerciseInput('');
             return;
         }
