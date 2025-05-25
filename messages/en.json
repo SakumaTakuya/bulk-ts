@@ -1,4 +1,12 @@
 {
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "signIn": "Sign In",
+  "signOut": "Sign Out",
+  "loading": "Loading...",
+  "pickADate": "Pick a date",
   "navigation.home": "Home",
   "navigation.exercises": "Exercises",
   "navigation.history": "History",
@@ -32,9 +40,6 @@
   "home.alreadyAddedWorkout": "This workout has already been added.",
   "home.addRow": "Add Row",
   "home.noSetsInWorkout": "No sets",
-  "home.edit": "Edit",
-  "home.save": "Save",
-  "home.cancel": "Cancel",
   "exercises.title": "Exercises",
   "exercises.addExercise": "Add Exercise",
   "exercises.name": "Name",
@@ -46,13 +51,5 @@
   "history.failedToLoad": "Failed to load workouts",
   "history.selectDate": "Select Date",
   "notFound.title": "404 - Page Not Found",
-  "notFound.message": "Sorry, the page you are looking for could not be found.",
-  "save": "Save",
-  "cancel": "Cancel",
-  "delete": "Delete",
-  "edit": "Edit",
-  "signIn": "Sign In",
-  "signOut": "Sign Out",
-  "loading": "Loading...",
-  "pickADate": "Pick a date"
+  "notFound.message": "Sorry, the page you are looking for could not be found."
 }

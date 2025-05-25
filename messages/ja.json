@@ -1,4 +1,12 @@
 {
+  "save": "保存",
+  "cancel": "キャンセル",
+  "delete": "削除",
+  "edit": "編集",
+  "signIn": "サインイン",
+  "signOut": "サインアウト",
+  "loading": "読み込み中...",
+  "pickADate": "日付を選択",
   "navigation.home": "ホーム",
   "navigation.exercises": "エクササイズ",
   "navigation.history": "履歴",
@@ -32,9 +40,6 @@
   "home.alreadyAddedWorkout": "このワークアウトは既に追加されています。",
   "home.addRow": "行追加",
   "home.noSetsInWorkout": "セットがありません",
-  "home.edit": "編集",
-  "home.save": "保存",
-  "home.cancel": "キャンセル",
   "exercises.title": "エクササイズ",
   "exercises.addExercise": "エクササイズを追加",
   "exercises.name": "名前",
@@ -46,13 +51,5 @@
   "history.failedToLoad": "ワークアウトの読み込みに失敗しました",
   "history.selectDate": "日付を選択してください",
   "notFound.title": "404 - ページが見つかりません",
-  "notFound.message": "申し訳ありませんが、リクエストされたページは見つかりませんでした。",
-  "save": "保存",
-  "cancel": "キャンセル",
-  "delete": "削除",
-  "edit": "編集",
-  "signIn": "サインイン",
-  "signOut": "サインアウト",
-  "loading": "読み込み中...",
-  "pickADate": "日付を選択"
+  "notFound.message": "申し訳ありませんが、リクエストされたページは見つかりませんでした。"
 }
