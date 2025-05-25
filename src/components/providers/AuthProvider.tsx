@@ -8,6 +8,6 @@ interface AuthProviderProps {
   // We don't need to pass the session here as SessionProvider fetches it
 }
 
-export default function AuthProvider({ children }: AuthProviderProps) {
+export default function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
   return <SessionProvider>{children}</SessionProvider>;
 }

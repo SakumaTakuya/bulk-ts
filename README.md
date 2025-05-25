@@ -43,70 +43,70 @@
 ## Prisma ER図
 
 ```mermaid
-erDiagram  
-    User ||--o{ Account : "has"  
-    User ||--o{ Session : "has"  
-    User ||--o{ Exercise : "creates"  
-    User ||--o{ WorkoutLog : "logs"  
-    Exercise ||--o{ Set : "used in"  
-    WorkoutLog ||--o{ Set : "contains"  
-      
-    User {  
-        string id "PK"  
-        string name "nullable"  
-        string email "UK, nullable"  
-        datetime emailVerified "nullable"  
-        string image "nullable"  
-    }  
-      
-    Account {  
-        string id "PK"  
-        string userId "FK"  
-        string type  
-        string provider  
-        string providerAccountId  
-        string refresh_token "nullable"  
-        string access_token "nullable"  
-    }  
-      
-    Session {  
-        string id "PK"  
-        string sessionToken "UK"  
-        string userId "FK"  
-        datetime expires  
-    }  
-      
-    VerificationToken {  
-        string identifier  
-        string token "UK"  
-        datetime expires  
-    }  
-      
-    Exercise {  
-        string id "PK"  
-        string name  
-        string userId "FK"  
-        datetime createdAt "default(now())"  
-        datetime updatedAt "auto-updated"  
-    }  
-      
-    WorkoutLog {  
-        string id "PK"  
-        datetime date  
-        string userId "FK"  
-        datetime createdAt "default(now())"  
-        datetime updatedAt "auto-updated"  
-    }  
-      
-    Set {  
-        string id "PK"  
-        int reps  
-        float weight  
-        string workoutLogId "FK"  
-        string exerciseId "FK"  
-        datetime createdAt "default(now())"  
-        datetime updatedAt "auto-updated"  
-    }  
+erDiagram
+    User ||--o{ Account : "has"
+    User ||--o{ Session : "has"
+    User ||--o{ Exercise : "creates"
+    User ||--o{ WorkoutLog : "logs"
+    Exercise ||--o{ Set : "used in"
+    WorkoutLog ||--o{ Set : "contains"
+
+    User {
+        string id "PK"
+        string name "nullable"
+        string email "UK, nullable"
+        datetime emailVerified "nullable"
+        string image "nullable"
+    }
+
+    Account {
+        string id "PK"
+        string userId "FK"
+        string type
+        string provider
+        string providerAccountId
+        string refresh_token "nullable"
+        string access_token "nullable"
+    }
+
+    Session {
+        string id "PK"
+        string sessionToken "UK"
+        string userId "FK"
+        datetime expires
+    }
+
+    VerificationToken {
+        string identifier
+        string token "UK"
+        datetime expires
+    }
+
+    Exercise {
+        string id "PK"
+        string name
+        string userId "FK"
+        datetime createdAt "default(now())"
+        datetime updatedAt "auto-updated"
+    }
+
+    WorkoutLog {
+        string id "PK"
+        datetime date
+        string userId "FK"
+        datetime createdAt "default(now())"
+        datetime updatedAt "auto-updated"
+    }
+
+    Set {
+        string id "PK"
+        int reps
+        float weight
+        string workoutLogId "FK"
+        string exerciseId "FK"
+        datetime createdAt "default(now())"
+        datetime updatedAt "auto-updated"
+    }
 ```
 
 ## ディレクトリ構成
