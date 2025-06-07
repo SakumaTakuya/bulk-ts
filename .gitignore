@@ -177,3 +177,6 @@ yarn-error.log*
 next-env.d.ts
 
 src/app/generated/prisma/
+
+sw.js
+workbox-*.js

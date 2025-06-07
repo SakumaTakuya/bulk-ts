@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { Geist, Geist_Mono } from 'next/font/google';
-import Navigation from '@/components/Navigation';
-import AuthProvider from '@/components/providers/AuthProvider';
+import Navigation from '@/components/navigation';
+import AuthProvider from '@/components/providers/auth-provider';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { getLocale } from 'next-intl/server';
