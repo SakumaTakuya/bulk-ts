@@ -28,6 +28,7 @@ export default function WorkoutClient({
   const format = useFormatter();
   const logs = useWorkoutStore((state) => state.logs);
   const addLog = useWorkoutStore((state) => state.addLog);
+  const postLogs = useWorkoutStore((state) => state.postWorkoutLogs);
 
   const addSet = useWorkoutStore((state) => state.addSetToLog);
 
@@ -48,18 +49,13 @@ export default function WorkoutClient({
     }
   }
 
-  const postWorkoutLog = async (log: WorkoutLog): Promise<void> => {
+  const saveLogs = async (): Promise<void> => {
     if (status !== 'authenticated') {
       return;
     }
 
-    const result = createWorkoutLogSchema.parse(log);
-
     try {
-
-
-
-      // addLog(result.data);
+      await postLogs();
     } catch (err: unknown) {
       return;
     }
