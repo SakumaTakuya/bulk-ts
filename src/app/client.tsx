@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useFormatter } from 'use-intl';
-import { Exercise, useWorkoutStore } from '@/lib/stores/workout-store';
+import { Exercise, useWorkoutStore, WorkoutLog } from '@/lib/stores/workout-store';
 import { DatePickerComponent } from '@/components/home/date-picker-component';
 import { Button } from '@/components/ui/button';
 import { WorkoutCardComponent } from '@/components/home/workout-card-component';
 import { Input } from '@/components/ui/input';
-import { clientExerciseSchema, createExerciseSchema } from '@/lib/schemas/workout-schemas';
+import { clientExerciseSchema, createExerciseSchema, createWorkoutLogSchema } from '@/lib/schemas/workout-schemas';
 
 interface WorkoutClientProps {
   initialExerciseData: Exercise[] | null;
@@ -21,46 +21,45 @@ export default function WorkoutClient({
   initialDataFetchError,
 }: WorkoutClientProps): React.JSX.Element {
   const [exercises, setExercises] = useState<Exercise[]>(initialExerciseData || []);
-  const updateExercise = useWorkoutStore((state) => state.updateExercise);
+  const postExercises = useWorkoutStore((state) => state.postExercises);
 
   const { status } = useSession();
   const t = useTranslations();
   const format = useFormatter();
   const logs = useWorkoutStore((state) => state.logs);
   const addLog = useWorkoutStore((state) => state.addLog);
-  const updateLog = useWorkoutStore((state) => state.updateLog);
+
+  const addSet = useWorkoutStore((state) => state.addSetToLog);
 
   // ワークアウト追加用
   const [exerciseInput, setExerciseInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  const postExercises = async (name: string, clientId: string): Promise<void> => {
+  const saveExercise = async (name: string, clientId: string): Promise<void> => {
     if (status !== 'authenticated') {
       return;
     }
 
     try {
-      const res = await fetch('/api/exercises', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: createExerciseSchema.parse({ name }).toString(),
-      });
+      const exercise = await postExercises(name, clientId);
+      setExercises((prev) => [...prev, exercise]);
+    } catch (err: unknown) {
+      return;
+    }
+  }
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
-      }
-      const result = clientExerciseSchema.safeParse({
-        ...(await res.json()),
-        clientId,
-      });
+  const postWorkoutLog = async (log: WorkoutLog): Promise<void> => {
+    if (status !== 'authenticated') {
+      return;
+    }
 
-      if (!result.success) {
-        throw new Error(result.error.message);
-      }
+    const result = createWorkoutLogSchema.parse(log);
 
-      setExercises((prev) => [...prev, result.data]);
-      updateExercise(result.data);
+    try {
+
+
+
+      // addLog(result.data);
     } catch (err: unknown) {
       return;
     }
@@ -78,7 +77,7 @@ export default function WorkoutClient({
 
     // 未登録なら新規作成
     if (!exist) {
-      postExercises(trimmedInput, exerciseClientId);
+      saveExercise(trimmedInput, exerciseClientId);
     }
 
     // 既に同じエクササイズのワークアウトが存在する場合は追加しない
@@ -87,16 +86,33 @@ export default function WorkoutClient({
       return;
     }
 
+    const workoutClientId = crypto.randomUUID();
     addLog({
-      clientId: crypto.randomUUID(),
+      clientId: workoutClientId,
       date: new Date().toISOString(),
       sets: [],
-      exercise: {
-        id: exerciseClientId,
+      exercise: exist ?? {
         name: trimmedInput,
         clientId: exerciseClientId,
       },
     });
+  }
+
+  const handleAddSet = (logId: string): void => {
+    const log = logs.find((l) => l.clientId === logId);
+    if (!log) {
+      return;
+    }
+
+    const newSet = {
+      id: crypto.randomUUID(),
+      clientId: crypto.randomUUID(),
+      workoutLogId: log.clientId,
+      reps: 0,
+      weight: 0,
+    };
+
+    addSet(log, newSet);
   }
 
   return (

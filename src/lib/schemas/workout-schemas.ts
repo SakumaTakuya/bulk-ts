@@ -33,16 +33,19 @@ export const createWorkoutLogSchema = workoutLogSchema.omit({
 
 export const clientExerciseSchema = exerciseSchema.extend({
   clientId: z.string().cuid(), // Client ID for the exercise
-})
+}).partial({
+  id: true, // Make id optional for client exercises
+});
 
-export const clientWorkoutSetSchema = createWorkoutSetSchema.extend({
+export const clientWorkoutSetSchema = workoutSetSchema.extend({
   clientId: z.string().cuid(), // Client ID for the set
 })
 
-export const clientWorkoutLogSchema = createWorkoutLogSchema.extend({
+export const clientWorkoutLogSchema = workoutLogSchema.extend({
   clientId: z.string().cuid(), // Client ID for the workout log
   sets: z.array(clientWorkoutSetSchema), // Client sets
   exercise: clientExerciseSchema
-}).omit({
+}).partial({
   exerciseId: true, // Omit exerciseId for client sets
+  id: true, // Make id optional for client workout logs
 });
