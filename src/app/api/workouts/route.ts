@@ -2,21 +2,9 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client'; // Import Prisma for TransactionClient type
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { z } from 'zod'; // Using Zod for validation
+import { setSchema, workoutLogSchema } from '@/lib/schemas/workout-schemas';
 import prisma from '@/lib/prisma';
-
-// Define validation schema for a single set
-const setSchema = z.object({
-  reps: z.number().int().min(0), // Reps must be a non-negative integer
-  weight: z.number().min(0), // Weight must be non-negative
-});
-
-// Define validation schema for the workout log request body
-const workoutLogSchema = z.object({
-  exerciseId: z.string().cuid(), // ExerciseId is now at the WorkoutLog level
-  date: z.string().datetime(), // Expect ISO 8601 date string
-  sets: z.array(setSchema).min(1), // Must have at least one set
-});
+import { z } from 'zod';
 
 // POST /api/workouts - Create a new workout log with sets
 export async function POST(request: NextRequest): Promise<NextResponse> {
