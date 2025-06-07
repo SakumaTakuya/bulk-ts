@@ -20,7 +20,7 @@ interface Actions {
   setLogs: (logs: WorkoutLog[]) => void;
   removeSetFromLog: (log: WorkoutLog, removeSet: WorkoutSet) => void;
   updateSetInLog: (log: WorkoutLog, updatedSet: WorkoutSet) => void;
-  updateExerciseInLog: (log: WorkoutLog, updatedExercise: Exercise) => void;
+  updateExercise: (exercise: Exercise) => void;
 }
 
 // Create the store
@@ -62,12 +62,12 @@ export const useWorkoutStore = create<State & Actions>((set) => ({
     ),
   })),
 
-  updateExerciseInLog: (log, updatedExercise) => set((state) => ({
+  updateExercise: (exercise) => set((state) => ({
     logs: state.logs.map((l) =>
-      l.clientId === log.clientId
+      l.exercise.clientId === exercise.clientId
         ? {
           ...l,
-          exercise: updatedExercise,
+          exercise: exercise,
         }
         : l
     ),
