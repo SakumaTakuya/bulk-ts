@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client'; // Import Prisma for TransactionClient type
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { setSchema, workoutLogSchema } from '@/lib/schemas/workout-schemas';
+import { createWorkoutSetSchema, createWorkoutLogSchema } from '@/lib/schemas/workout-schemas';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.json();
 
     // Validate request body
-    const validationResult = workoutLogSchema.safeParse(body);
+    const validationResult = createWorkoutLogSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
         { error: 'Invalid request body', details: validationResult.error.errors },
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // 2. Create all Set entries linked to the WorkoutLog
       await tx.set.createMany({
-        data: sets.map((set: z.infer<typeof setSchema>) => ({
+        data: sets.map((set: z.infer<typeof createWorkoutSetSchema>) => ({
           reps: set.reps,
           weight: set.weight,
           workoutLogId: log.id, // Link to the created log
