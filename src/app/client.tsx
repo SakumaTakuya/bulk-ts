@@ -23,6 +23,10 @@ export default function WorkoutClient({
   const [exercises, setExercises] = useState<Exercise[]>(initialExerciseData || []);
   const postExercises = useWorkoutStore((state) => state.postExercises);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const saveDebug = (date: Date | undefined) => {
+    console.log(date);
+    setSelectedDate(date);
+  };
 
   const { status } = useSession();
   const t = useTranslations();
@@ -147,7 +151,7 @@ export default function WorkoutClient({
       <section className="container mx-auto max-w-3xl">
         <div className="flex flex-row items-end gap-4 mb-4">
           <div className="flex-1">
-            <DatePickerComponent selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+            <DatePickerComponent selectedDate={selectedDate} onSelectDate={saveDebug} />
           </div>
           <Button
             onClick={saveLogs}
@@ -206,7 +210,7 @@ export default function WorkoutClient({
             disabled={!exerciseInput.trim()}
             className="w-full mt-2"
           >
-            <PlusCircle className="mr-2 h-4 w-4" /> {t('addWorkout')}
+            <PlusCircle className="mr-2 h-4 w-4" /> {t('add')}
           </Button>
         </div>
       </section>
