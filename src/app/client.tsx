@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React, { useMemo, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useFormatter } from 'use-intl';
-import { Exercise, useWorkoutStore, WorkoutLog } from '@/lib/stores/workout-store';
-import { DatePickerComponent } from '@/components/home/date-picker-component';
+import { Exercise, useWorkoutStore, WorkoutLog, WorkoutSet } from '@/lib/stores/workout-store';
 import { Button } from '@/components/ui/button';
+import { DatePickerComponent } from '@/components/home/date-picker-component';
 import { WorkoutCardComponent } from '@/components/home/workout-card-component';
 import { Input } from '@/components/ui/input';
-import { clientExerciseSchema, createExerciseSchema, createWorkoutLogSchema } from '@/lib/schemas/workout-schemas';
+import { PlusCircle } from 'lucide-react';
 
 interface WorkoutClientProps {
   initialExerciseData: Exercise[] | null;
@@ -22,6 +22,7 @@ export default function WorkoutClient({
 }: WorkoutClientProps): React.JSX.Element {
   const [exercises, setExercises] = useState<Exercise[]>(initialExerciseData || []);
   const postExercises = useWorkoutStore((state) => state.postExercises);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   const { status } = useSession();
   const t = useTranslations();
@@ -62,6 +63,11 @@ export default function WorkoutClient({
   }
 
   const handleAddWorkout = (): void => {
+    const date = selectedDate;
+    if (!date) {
+      return;
+    }
+
     const trimmedInput = exerciseInput.trim();
     if (!trimmedInput) {
       return;
@@ -85,7 +91,7 @@ export default function WorkoutClient({
     const workoutClientId = crypto.randomUUID();
     addLog({
       clientId: workoutClientId,
-      date: new Date().toISOString(),
+      date: date.toISOString(),
       sets: [],
       exercise: exist ?? {
         name: trimmedInput,
@@ -111,8 +117,100 @@ export default function WorkoutClient({
     addSet(log, newSet);
   }
 
+  const handleRemoveSet = (logId: string, set: WorkoutSet): void => {
+    const log = logs.find((l) => l.clientId === logId);
+    if (!log) {
+      return;
+    }
+
+    useWorkoutStore.getState().removeSetFromLog(log, set);
+  }
+
+  // suggestion
+  const filteredExercises = useMemo(
+    () => exercises.filter((exercise) => exercise.name.toLowerCase().includes(exerciseInput.toLowerCase())),
+    [exercises, exerciseInput]
+  );
+
+  if (status === 'loading') {
+    return <></>
+  }
+
+  if (status === 'unauthenticated') {
+    return (<>
+      <Button onClick={() => signIn('google')}>{t('signIn')}</Button>
+    </>);
+  }
+
   return (
-    <></>
+    <article>
+      <section className="container mx-auto max-w-3xl">
+        <div className="flex flex-row items-end gap-4 mb-4">
+          <div className="flex-1">
+            <DatePickerComponent selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+          </div>
+          <Button
+            onClick={saveLogs}
+            disabled={!selectedDate || logs.flatMap((w) => w.sets).length === 0}
+          >
+            {t('save')}
+          </Button>
+        </div>
+        {logs.map((log) => (
+          <WorkoutCardComponent
+            key={log.clientId}
+            exerciseId={log.exercise.clientId}
+            onAddSet={handleAddSet}
+            onRemoveSet={(id, set) => { }}
+            onRemoveWorkout={(id) => useWorkoutStore.getState().removeLog(log)}
+            onEditSet={(id, set) => { }}
+            exerciseName={log.exercise.name}
+            sets={[]}
+          />
+        ))}
+      </section>
+      <section className="fixed w-full z-10">
+        <div className="container mx-auto max-w-3xl px-4">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder={t('exerciseName')}
+              value={exerciseInput}
+              onChange={(e) => setExerciseInput(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              autoComplete="off"
+              className="w-full"
+              data-testid="exercise-input"
+            />
+            {isFocused && exerciseInput && filteredExercises.length > 0 && (
+              <ul className="absolute z-20 bg-accent border-collapse w-full mt-1 max-h-40 overflow-auto rounded shadow">
+                {filteredExercises.map((ex) => (
+                  <li
+                    key={ex.id}
+                    className="relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setExerciseInput(ex.name);
+                      setIsFocused(false);
+                    }}
+                  >
+                    {ex.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <Button
+            onClick={handleAddWorkout}
+            disabled={!exerciseInput.trim()}
+            className="w-full mt-2"
+          >
+            <PlusCircle className="mr-2 h-4 w-4" /> {t('addWorkout')}
+          </Button>
+        </div>
+      </section>
+    </article>
   )
 
 }

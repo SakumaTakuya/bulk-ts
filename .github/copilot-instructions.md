@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.ts"
+applyTo: "**"
 ---
 # Project coding standards
 
