@@ -169,7 +169,7 @@ export default function WorkoutClient({
           />
         ))}
       </section>
-      <section className="fixed w-full z-10">
+      <section className="fixed bottom-16 left-0 w-full z-10">
         <div className="container mx-auto max-w-3xl px-4">
           <div className="relative">
             <Input
