@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.ts"
+applyTo: "**"
 ---
 # Project coding standards
 
@@ -105,3 +105,4 @@ applyTo: "**/*.ts"
 - `zod`: スキーマバリデーションライブラリ
 - `zustand`: 状態管理ライブラリ
 - `prisma`: ORMライブラリ
+

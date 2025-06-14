@@ -1,4 +1,7 @@
 {
+  "save": "保存",
+  "add": "追加",
+  "exerciseName": "エクササイズ名",
   "navigation": {
     "home": "ホーム",
     "exercises": "エクササイズ",
