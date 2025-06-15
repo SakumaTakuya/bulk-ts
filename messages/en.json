@@ -1,4 +1,7 @@
 {
+  "save": "Save",
+  "add": "Add",
+  "exerciseName": "Exercise Name",
   "navigation": {
     "home": "Home",
     "exercises": "Exercises",
